@@ -130,54 +130,78 @@
 #define FX_MODE_MULTI_DYNAMIC           10
 #define FX_MODE_RAINBOW                 11
 #define FX_MODE_RAINBOW_CYCLE           12
-#define FX_MODE_SCAN                    13
-#define FX_MODE_DUAL_SCAN               14
-#define FX_MODE_FADE                    15
-#define FX_MODE_THEATER_CHASE           16
-#define FX_MODE_THEATER_CHASE_RAINBOW   17
-#define FX_MODE_RUNNING_LIGHTS          18
-#define FX_MODE_TWINKLE                 19
-#define FX_MODE_TWINKLE_RANDOM          20
-#define FX_MODE_TWINKLE_FADE            21
-#define FX_MODE_TWINKLE_FADE_RANDOM     22
-#define FX_MODE_SPARKLE                 23
-#define FX_MODE_FLASH_SPARKLE           24
-#define FX_MODE_HYPER_SPARKLE           25
-#define FX_MODE_STROBE                  26
-#define FX_MODE_STROBE_RAINBOW          27
-#define FX_MODE_MULTI_STROBE            28
-#define FX_MODE_BLINK_RAINBOW           29
-#define FX_MODE_CHASE_WHITE             30
-#define FX_MODE_CHASE_COLOR             31
-#define FX_MODE_CHASE_RANDOM            32
-#define FX_MODE_CHASE_RAINBOW           33
-#define FX_MODE_CHASE_FLASH             34
-#define FX_MODE_CHASE_FLASH_RANDOM      35
-#define FX_MODE_CHASE_RAINBOW_WHITE     36
-#define FX_MODE_CHASE_BLACKOUT          37
-#define FX_MODE_CHASE_BLACKOUT_RAINBOW  38
-#define FX_MODE_COLOR_SWEEP_RANDOM      39
-#define FX_MODE_RUNNING_COLOR           40
-#define FX_MODE_RUNNING_RED_BLUE        41
-#define FX_MODE_RUNNING_RANDOM          42
-#define FX_MODE_LARSON_SCANNER          43
-#define FX_MODE_COMET                   44
-#define FX_MODE_FIREWORKS               45
-#define FX_MODE_FIREWORKS_RANDOM        46
-#define FX_MODE_MERRY_CHRISTMAS         47
-#define FX_MODE_FIRE_FLICKER            48
-#define FX_MODE_FIRE_FLICKER_SOFT       49
-#define FX_MODE_FIRE_FLICKER_INTENSE    50
-#define FX_MODE_CIRCUS_COMBUSTUS        51
-#define FX_MODE_HALLOWEEN               52
-#define FX_MODE_BICOLOR_CHASE           53
-#define FX_MODE_TRICOLOR_CHASE          54
-#define FX_MODE_ICU                     55
-#define FX_MODE_CUSTOM                  56  // keep this for backward compatiblity
-#define FX_MODE_CUSTOM_0                56  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_1                57
-#define FX_MODE_CUSTOM_2                58
-#define FX_MODE_CUSTOM_3                59
+#define FX_MODE_COOL_CYCLE              13
+#define FX_MODE_WARM_CYCLE              14
+#define FX_MODE_NATURE_CYCLE            15
+#define FX_MODE_CANDY_CYCLE             16
+#define FX_MODE_CHRISTMAS_CYCLE         17
+#define FX_MODE_SCAN                    18
+#define FX_MODE_DUAL_SCAN               19
+#define FX_MODE_FADE                    20
+#define FX_MODE_THEATER_CHASE           21
+#define FX_MODE_THEATER_CHASE_RAINBOW   22
+#define FX_MODE_RUNNING_LIGHTS          23
+#define FX_MODE_TWINKLE                 24
+#define FX_MODE_TWINKLE_RANDOM          25
+#define FX_MODE_TWINKLE_FADE            26
+#define FX_MODE_TWINKLE_FADE_RANDOM     27
+#define FX_MODE_SPARKLE                 28
+#define FX_MODE_FLASH_SPARKLE           29
+#define FX_MODE_HYPER_SPARKLE           30
+#define FX_MODE_STROBE                  31
+#define FX_MODE_STROBE_RAINBOW          32
+#define FX_MODE_STROBE_COOL             33
+#define FX_MODE_STROBE_WARM             34
+#define FX_MODE_STROBE_NATURE           35
+#define FX_MODE_STROBE_CANDY            36
+#define FX_MODE_STROBE_CHRISTMAS        37
+#define FX_MODE_MULTI_STROBE            38
+#define FX_MODE_BLINK_RAINBOW           39
+#define FX_MODE_CHASE_WHITE             40
+#define FX_MODE_CHASE_COLOR             41
+#define FX_MODE_CHASE_RANDOM            42
+#define FX_MODE_CHASE_RAINBOW           43
+#define FX_MODE_CHASE_FLASH             44
+#define FX_MODE_CHASE_FLASH_RANDOM      45
+#define FX_MODE_CHASE_RAINBOW_WHITE     46
+#define FX_MODE_CHASE_BLACKOUT          47
+#define FX_MODE_CHASE_BLACKOUT_RAINBOW  48
+#define FX_MODE_COLOR_SWEEP_RANDOM      49
+#define FX_MODE_RUNNING_COLOR           50
+#define FX_MODE_RUNNING_RED_BLUE        51
+#define FX_MODE_RUNNING_RANDOM          52
+#define FX_MODE_LARSON_SCANNER          53
+#define FX_MODE_COMET                   54
+#define FX_MODE_FIREWORKS               55
+#define FX_MODE_FIREWORKS_RANDOM        56
+#define FX_MODE_MERRY_CHRISTMAS         57
+#define FX_MODE_FIRE_FLICKER            58
+#define FX_MODE_FIRE_FLICKER_SOFT       59
+#define FX_MODE_FIRE_FLICKER_INTENSE    60
+#define FX_MODE_CIRCUS_COMBUSTUS        61
+#define FX_MODE_HALLOWEEN               62
+#define FX_MODE_BICOLOR_CHASE           63
+#define FX_MODE_TRICOLOR_CHASE          64
+#define FX_MODE_CANDY_CANE              65
+#define FX_MODE_CUSTOM                  65
+#define FX_MODE_CUSTOM_0                66  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_1                67  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_2                68  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_3                69  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_4                70  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_5                71  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_6                72  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_7                73  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_8                74  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_9                75  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_10               76  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_11               77  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_12               78  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_13               79  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_14               80  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_15               81  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_16               82  // custom modes need to go at the end
+
 
 // create GLOBAL names to allow WS2812FX to compile with sketches and other libs that store strings
 // in PROGMEM (get rid of the "section type conflict with __c" errors once and for all. Amen.)
