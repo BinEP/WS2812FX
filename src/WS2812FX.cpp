@@ -63,7 +63,10 @@ WS2812FX::WS2812FX(CRGB* leds, uint_16 numLeds, uint8_t type) {
 }
 
 WS2812FX::WS2812FX(void) {
-
+  LED_TYPE = NEOPIXEL;
+  numLEDs = 0;
+  ledArray = NULL;
+  numBytes = 0;
 }
 
 WS2812FX::~WS2812FX() {
