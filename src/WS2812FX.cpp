@@ -54,9 +54,25 @@
 
 #include "WS2812FX.h"
 
+
+WS2812FX::WS2812FX(CRGB* leds, uint_16 numLeds, uint8_t type) {
+  LED_TYPE = type;
+  numLEDs = numLeds;
+  ledArray = leds;
+  numBytes = sizeof(ledArray[0] * numLeds);
+}
+
+WS2812FX::WS2812FX(void) {
+
+}
+
+WS2812FX::~WS2812FX() {
+
+}
+
 void WS2812FX::init() {
   resetSegmentRuntimes();
-  Adafruit_NeoPixel::begin();
+  // Adafruit_NeoPixel::begin();
 }
 
 // void WS2812FX::timer() {
@@ -96,27 +112,35 @@ void WS2812FX::setPixelColor(uint16_t n, uint32_t c) {
     uint8_t r = (c >> 16) & 0xFF;
     uint8_t g = (c >>  8) & 0xFF;
     uint8_t b =  c        & 0xFF;
-    Adafruit_NeoPixel::setPixelColor(n, gamma8(r), gamma8(g), gamma8(b), gamma8(w));
+    ledArray[n].setRGB(gamma8(r), gamma8(g), gamma8(b));
+    // Adafruit_NeoPixel::setPixelColor(n, gamma8(r), gamma8(g), gamma8(b), gamma8(w));
   } else {
-    Adafruit_NeoPixel::setPixelColor(n, c);
+    uint8_t w = (c >> 24) & 0xFF;
+    uint8_t r = (c >> 16) & 0xFF;
+    uint8_t g = (c >>  8) & 0xFF;
+    uint8_t b =  c        & 0xFF;
+    ledArray[n].setRGB(r, g, b);
+    // Adafruit_NeoPixel::setPixelColor(n, c);
   }
 }
 
 void WS2812FX::setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
   if(IS_GAMMA) {
-    Adafruit_NeoPixel::setPixelColor(n, gamma8(r), gamma8(g), gamma8(b));
+    ledArray[n].setRGB(gamma8(r), gamma8(g), gamma8(b));
+    // Adafruit_NeoPixel::setPixelColor(n, gamma8(r), gamma8(g), gamma8(b));
   } else {
-    Adafruit_NeoPixel::setPixelColor(n, r, g, b);
+    ledArray[n].setRGB(r, g, b);
+    // Adafruit_NeoPixel::setPixelColor(n, r, g, b);
   }
 }
 
-void WS2812FX::setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
-  if(IS_GAMMA) {
-    Adafruit_NeoPixel::setPixelColor(n, gamma8(r), gamma8(g), gamma8(b), gamma8(w));
-  } else {
-    Adafruit_NeoPixel::setPixelColor(n, r, g, b, w);
-  }
-}
+// void WS2812FX::setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
+//   if(IS_GAMMA) {
+//     Adafruit_NeoPixel::setPixelColor(n, gamma8(r), gamma8(g), gamma8(b), gamma8(w));
+//   } else {
+//     Adafruit_NeoPixel::setPixelColor(n, r, g, b, w);
+//   }
+// }
 
 void WS2812FX::copyPixels(uint16_t dest, uint16_t src, uint16_t count) {
   uint8_t *pixels = getPixels();
@@ -128,7 +152,8 @@ void WS2812FX::copyPixels(uint16_t dest, uint16_t src, uint16_t count) {
 // overload show() functions so we can use custom show()
 void WS2812FX::show(void) {
   if(customShow == NULL) {
-    Adafruit_NeoPixel::show();
+    FastLED.show();
+    // Adafruit_NeoPixel::show();
   } else {
     customShow();
   }
@@ -214,7 +239,7 @@ void WS2812FX::setColors(uint8_t seg, uint32_t* c) {
 
 void WS2812FX::setBrightness(uint8_t b) {
   b = constrain(b, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
-  Adafruit_NeoPixel::setBrightness(b);
+  FastLED.setBrightness(b)
   show();
 }
 
@@ -228,36 +253,36 @@ void WS2812FX::decreaseBrightness(uint8_t s) {
   setBrightness(s);
 }
 
-void WS2812FX::setLength(uint16_t b) {
-  resetSegmentRuntimes();
-  if (b < 1) b = 1;
+// void WS2812FX::setLength(uint16_t b) {
+//   resetSegmentRuntimes();
+//   if (b < 1) b = 1;
 
-  // Decrease numLEDs to maximum available memory
-  do {
-      Adafruit_NeoPixel::updateLength(b);
-      b--;
-  } while(!Adafruit_NeoPixel::numLEDs && b > 1);
+//   // Decrease numLEDs to maximum available memory
+//   do {
+//       Adafruit_NeoPixel::updateLength(b);
+//       b--;
+//   } while(!Adafruit_NeoPixel::numLEDs && b > 1);
 
-  _segments[0].start = 0;
-  _segments[0].stop = Adafruit_NeoPixel::numLEDs - 1;
-}
+//   _segments[0].start = 0;
+//   _segments[0].stop = Adafruit_NeoPixel::numLEDs - 1;
+// }
 
-void WS2812FX::increaseLength(uint16_t s) {
-  s = _segments[0].stop - _segments[0].start + 1 + s;
-  setLength(s);
-}
+// void WS2812FX::increaseLength(uint16_t s) {
+//   s = _segments[0].stop - _segments[0].start + 1 + s;
+//   setLength(s);
+// }
 
-void WS2812FX::decreaseLength(uint16_t s) {
-  if (s > _segments[0].stop - _segments[0].start + 1) s = 1;
-  s = _segments[0].stop - _segments[0].start + 1 - s;
+// void WS2812FX::decreaseLength(uint16_t s) {
+//   if (s > _segments[0].stop - _segments[0].start + 1) s = 1;
+//   s = _segments[0].stop - _segments[0].start + 1 - s;
 
-  for(uint16_t i=_segments[0].start + s; i <= (_segments[0].stop - _segments[0].start + 1); i++) {
-    setPixelColor(i, 0);
-  }
-  show();
+//   for(uint16_t i=_segments[0].start + s; i <= (_segments[0].stop - _segments[0].start + 1); i++) {
+//     setPixelColor(i, 0);
+//   }
+//   show();
 
-  setLength(s);
-}
+//   setLength(s);
+// }
 
 boolean WS2812FX::isRunning() {
   return _running;
@@ -305,7 +330,7 @@ uint8_t WS2812FX::getOptions(uint8_t seg) {
 }
 
 uint16_t WS2812FX::getLength(void) {
-  return numPixels();
+  return numLEDs;
 }
 
 uint16_t WS2812FX::getNumBytes(void) {
@@ -313,7 +338,12 @@ uint16_t WS2812FX::getNumBytes(void) {
 }
 
 uint8_t WS2812FX::getNumBytesPerPixel(void) {
-  return (wOffset == rOffset) ? 3 : 4; // 3=RGB, 4=RGBW
+  return sizeof(CRGB);
+  // return (wOffset == rOffset) ? 3 : 4; // 3=RGB, 4=RGBW
+}
+
+uint8_t* WS2812FX::getPixels(void) {
+  return (uint8_t*) ledArray;
 }
 
 uint8_t WS2812FX::getModeCount(void) {
@@ -372,23 +402,24 @@ const __FlashStringHelper* WS2812FX::getModeName(uint8_t m) {
   }
 }
 
-void WS2812FX::setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, bool reverse) {
+void WS2812FX::setSegment(uint8_t pin, uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, bool reverse) {
   uint32_t colors[] = {color, 0, 0};
-  setSegment(n, start, stop, mode, colors, speed, reverse);
+  setSegment(pin, n, start, stop, mode, colors, speed, reverse);
 }
 
-void WS2812FX::setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, uint8_t options) {
+void WS2812FX::setSegment(uint8_t pin, uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, uint8_t options) {
   uint32_t colors[] = {color, 0, 0};
-  setSegment(n, start, stop, mode, colors, speed, options);
+  setSegment(pin, n, start, stop, mode, colors, speed, options);
 }
 
-void WS2812FX::setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse) {
-  setSegment(n, start, stop, mode, colors, speed, (uint8_t)(reverse ? REVERSE : NO_OPTIONS));
+void WS2812FX::setSegment(uint8_t pin, uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse) {
+  setSegment(pin, n, start, stop, mode, colors, speed, (uint8_t)(reverse ? REVERSE : NO_OPTIONS));
 }
 
-void WS2812FX::setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, uint8_t options) {
+void WS2812FX::setSegment(uint8_t pin, uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, uint8_t options) {
   if(n < (sizeof(_segments) / sizeof(_segments[0]))) {
     if(n + 1 > _num_segments) _num_segments = n + 1;
+    _segments[n].pin = pin;
     _segments[n].start = start;
     _segments[n].stop = stop;
     _segments[n].mode = mode;
@@ -398,6 +429,7 @@ void WS2812FX::setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode
     for(uint8_t i=0; i<NUM_COLORS; i++) {
       _segments[n].colors[i] = colors[i];
     }
+    FastLED.addLeds<LED_TYPE, pin>(ledArray, start, stop);
   }
 }
 
@@ -406,7 +438,7 @@ void WS2812FX::resetSegments() {
   memset(_segments, 0, sizeof(_segments));
   _segment_index = 0;
   _num_segments = 1;
-  setSegment(0, 0, 7, FX_MODE_STATIC, (const uint32_t[]){DEFAULT_COLOR, 0, 0}, DEFAULT_SPEED, NO_OPTIONS);
+  setSegment(6, 0, 0, 7, FX_MODE_STATIC, (const uint32_t[]){DEFAULT_COLOR, 0, 0}, DEFAULT_SPEED, NO_OPTIONS);
 }
 
 void WS2812FX::resetSegmentRuntimes() {
@@ -427,7 +459,10 @@ void WS2812FX::resetSegmentRuntime(uint8_t seg) {
  * Turns everything off. Doh.
  */
 void WS2812FX::strip_off() {
-  Adafruit_NeoPixel::clear();
+  for (int i = 0; i < getLength(); i++) {
+      ledArray[i] = CRGB::BLACK;
+  }
+  // Adafruit_NeoPixel::clear();
   show();
 }
 
