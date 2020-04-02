@@ -68,6 +68,20 @@
 #define SEGMENT_LENGTH   (uint16_t)(SEGMENT.stop - SEGMENT.start + 1)
 
 // some common colors
+// #define RED        (uint32_t)0xFF0000
+// #define GREEN      (uint32_t)0x00FF00
+// #define BLUE       (uint32_t)0x0000FF
+// #define WHITE      (uint32_t)0xFFFFFF
+// #define BLACK      (uint32_t)0x000000
+// #define YELLOW     (uint32_t)0xFFFF00
+// #define CYAN       (uint32_t)0x00FFFF
+// #define MAGENTA    (uint32_t)0xFF00FF
+// #define PURPLE     (uint32_t)0x400080
+// #define ORANGE     (uint32_t)0xFF3000
+// #define PINK       (uint32_t)0xFF1493
+// #define ULTRAWHITE (uint32_t)0xFFFFFFFF
+// #define DARK(c)    (uint32_t)((c >> 4) & 0x0f0f0f0f)
+
 #define RED        (uint32_t)0xFF0000
 #define GREEN      (uint32_t)0x00FF00
 #define BLUE       (uint32_t)0x0000FF
@@ -178,6 +192,33 @@
 #define FX_MODE_CUSTOM_1                57
 #define FX_MODE_CUSTOM_2                58
 #define FX_MODE_CUSTOM_3                59
+
+
+/* Similar to above, but for an 8-bit gamma-correction table.
+   Copy & paste this snippet into a Python REPL to regenerate:
+import math
+gamma=2.6
+for x in range(256):
+    print("{:3},".format(int(math.pow((x)/255.0,gamma)*255.0+0.5))),
+    if x&15 == 15: print
+*/
+static const uint8_t PROGMEM _NeoPixelGammaTable[256] = {
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,
+    1,  1,  1,  1,  2,  2,  2,  2,  2,  2,  2,  2,  3,  3,  3,  3,
+    3,  3,  4,  4,  4,  4,  5,  5,  5,  5,  5,  6,  6,  6,  6,  7,
+    7,  7,  8,  8,  8,  9,  9,  9, 10, 10, 10, 11, 11, 11, 12, 12,
+   13, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18, 19, 19, 20,
+   20, 21, 21, 22, 22, 23, 24, 24, 25, 25, 26, 27, 27, 28, 29, 29,
+   30, 31, 31, 32, 33, 34, 34, 35, 36, 37, 38, 38, 39, 40, 41, 42,
+   42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+   58, 59, 60, 61, 62, 63, 64, 65, 66, 68, 69, 70, 71, 72, 73, 75,
+   76, 77, 78, 80, 81, 82, 84, 85, 86, 88, 89, 90, 92, 93, 94, 96,
+   97, 99,100,102,103,105,106,108,109,111,112,114,115,117,119,120,
+  122,124,125,127,129,130,132,134,136,137,139,141,143,145,146,148,
+  150,152,154,156,158,160,162,164,166,168,170,172,174,176,178,180,
+  182,184,186,188,191,193,195,197,199,202,204,206,209,211,213,215,
+  218,220,223,225,227,230,232,235,237,240,242,245,247,250,252,255};
 
 // create GLOBAL names to allow WS2812FX to compile with sketches and other libs that store strings
 // in PROGMEM (get rid of the "section type conflict with __c" errors once and for all. Amen.)
@@ -305,14 +346,13 @@ static const __FlashStringHelper* _names[] = {
 	FSH(name_59)
 };
 
-class WS2812FX : public Adafruit_NeoPixel {
+class WS2812FX {
 
 	typedef uint16_t (WS2812FX::*mode_ptr)(void);
 	
 	// segment parameters
 	public:
 		typedef struct Segment { // 20 bytes
-			uint8_t  pin;
 			uint16_t start;
 			uint16_t stop;
 			uint16_t speed;
@@ -331,11 +371,8 @@ class WS2812FX : public Adafruit_NeoPixel {
 			uint16_t aux_param3; // auxilary param (usually stores a segment index)
 		} segment_runtime;
 
-		WS2812FX(uint16_t n, uint8_t p, neoPixelType t) : Adafruit_NeoPixel(n, p, t) {
 
-			WS2812FX(CRGB* leds, neoPixelType type=NEO_GRB + NEO_KHZ800);
-			WS2812FX(void);
-			~WS2812FX();
+		WS2812FX(struct CRGB* leds, uint16_t numLeds) {
 
 			_mode[FX_MODE_STATIC]                  = &WS2812FX::mode_static;
 			_mode[FX_MODE_BLINK]                   = &WS2812FX::mode_blink;
@@ -406,15 +443,28 @@ class WS2812FX : public Adafruit_NeoPixel {
 			_mode[FX_MODE_CUSTOM_2]                = &WS2812FX::mode_custom_2;
 			_mode[FX_MODE_CUSTOM_3]                = &WS2812FX::mode_custom_3;
 
-			brightness = DEFAULT_BRIGHTNESS + 1; // Adafruit_NeoPixel internally offsets brightness by 1
+			numLEDs = numLeds;
+			ledArray = leds;
+			numBytes = sizeof(ledArray[0]) * numLeds;
+			FastLED.setBrightness(DEFAULT_BRIGHTNESS);
 			_running = false;
 			_num_segments = 1;
 			_segments[0].mode = DEFAULT_MODE;
 			_segments[0].colors[0] = DEFAULT_COLOR;
 			_segments[0].start = 0;
-			_segments[0].stop = n - 1;
+			_segments[0].stop = numLeds - 1;
 			_segments[0].speed = DEFAULT_SPEED;
 			resetSegmentRuntimes();
+		}
+
+		WS2812FX(void) {
+			numLEDs = 0;
+			ledArray = NULL;
+			numBytes = 0;
+		}
+
+		~WS2812FX() {
+
 		}
 
 		void
@@ -450,10 +500,6 @@ class WS2812FX : public Adafruit_NeoPixel {
 			decreaseLength(uint16_t s),
 			trigger(void),
 			setNumSegments(uint8_t n),
-			setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color,          uint16_t speed, bool reverse),
-			setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color,          uint16_t speed, uint8_t options),
-			setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse),
-			setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, uint8_t options),
 			resetSegments(),
 			resetSegmentRuntimes(),
 			resetSegmentRuntime(uint8_t),
@@ -462,6 +508,41 @@ class WS2812FX : public Adafruit_NeoPixel {
 			setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_t w),
 			copyPixels(uint16_t d, uint16_t s, uint16_t c),
 			show(void);
+
+
+			template<uint8_t PIN>
+			void setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, bool reverse) {
+			  uint32_t colors[] = {color, 0, 0};
+			  setSegment<PIN>(n, start, stop, mode, colors, speed, reverse);
+			}
+
+			template<uint8_t PIN>
+			void setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, uint8_t options) {
+			  uint32_t colors[] = {color, 0, 0};
+			  setSegment<PIN>(n, start, stop, mode, colors, speed, options);
+			}
+
+			template<uint8_t PIN>
+			void setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse) {
+			  setSegment<PIN>(n, start, stop, mode, colors, speed, (uint8_t)(reverse ? REVERSE : NO_OPTIONS));
+			}
+
+			template<uint8_t PIN>
+			void setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, uint8_t options) {
+			  if(n < (sizeof(_segments) / sizeof(_segments[0]))) {
+			    if(n + 1 > _num_segments) _num_segments = n + 1;
+			    _segments[n].start = start;
+			    _segments[n].stop = stop;
+			    _segments[n].mode = mode;
+			    _segments[n].speed = speed;
+			    _segments[n].options = options;
+
+			    for(uint8_t i=0; i<NUM_COLORS; i++) {
+			      _segments[n].colors[i] = colors[i];
+			    }
+			    FastLED.addLeds<WS2812, PIN>(ledArray, start, stop);
+			  }
+			}
 
 		boolean
 			isRunning(void),
@@ -476,6 +557,7 @@ class WS2812FX : public Adafruit_NeoPixel {
 			random8(uint8_t),
 			getMode(void),
 			getMode(uint8_t),
+			getBrightness(void),
 			getModeCount(void),
 			setCustomMode(const __FlashStringHelper* name, uint16_t (*p)()),
 			setCustomMode(uint8_t i, const __FlashStringHelper* name, uint16_t (*p)()),
@@ -483,6 +565,8 @@ class WS2812FX : public Adafruit_NeoPixel {
 			get_random_wheel_index(uint8_t),
 			getOptions(uint8_t),
 			getNumBytesPerPixel(void);
+
+		uint8_t* getPixels(void);
 
 		uint16_t
 			random16(void),
@@ -495,8 +579,14 @@ class WS2812FX : public Adafruit_NeoPixel {
 		uint32_t
 			color_wheel(uint8_t),
 			getColor(void),
+			getPixelColor(uint16_t n),
 			getColor(uint8_t),
 			intensitySum(void);
+
+
+		static uint8_t    gamma8(uint8_t x) {
+			return pgm_read_byte(&_NeoPixelGammaTable[x]); // 0-255 in, 0-255 out
+		}
 
 		uint32_t* getColors(uint8_t);
 		uint32_t* intensitySums(void);
@@ -595,10 +685,9 @@ class WS2812FX : public Adafruit_NeoPixel {
 
 	private:
 		// TODO : Make sure this gets set
-		CRGB* ledArray;
+		struct CRGB* ledArray;
 		uint16_t numLEDs; //Number of LEDs
 		uint16_t numBytes;	//Size of pixels buffer
-		uint16_t LED_TYPE;
 		uint16_t _rand16seed;
 		uint16_t (*customModes[MAX_CUSTOM_MODES])(void) {
 			[]{ return (uint16_t)1000; },

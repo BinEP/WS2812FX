@@ -55,23 +55,7 @@
 #include "WS2812FX.h"
 
 
-WS2812FX::WS2812FX(CRGB* leds, uint_16 numLeds, uint8_t type) {
-  LED_TYPE = type;
-  numLEDs = numLeds;
-  ledArray = leds;
-  numBytes = sizeof(ledArray[0] * numLeds);
-}
 
-WS2812FX::WS2812FX(void) {
-  LED_TYPE = NEOPIXEL;
-  numLEDs = 0;
-  ledArray = NULL;
-  numBytes = 0;
-}
-
-WS2812FX::~WS2812FX() {
-
-}
 
 void WS2812FX::init() {
   resetSegmentRuntimes();
@@ -137,13 +121,16 @@ void WS2812FX::setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
   }
 }
 
-// void WS2812FX::setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
-//   if(IS_GAMMA) {
-//     Adafruit_NeoPixel::setPixelColor(n, gamma8(r), gamma8(g), gamma8(b), gamma8(w));
-//   } else {
-//     Adafruit_NeoPixel::setPixelColor(n, r, g, b, w);
-//   }
-// }
+// We ignore the W channel like adafruit neopixel does
+void WS2812FX::setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
+  if(IS_GAMMA) {
+    ledArray[n].setRGB(gamma8(r), gamma8(g), gamma8(b));
+    // Adafruit_NeoPixel::setPixelColor(n, gamma8(r), gamma8(g), gamma8(b));
+  } else {
+    ledArray[n].setRGB(r, g, b);
+    // Adafruit_NeoPixel::setPixelColor(n, r, g, b);
+  }
+}
 
 void WS2812FX::copyPixels(uint16_t dest, uint16_t src, uint16_t count) {
   uint8_t *pixels = getPixels();
@@ -242,7 +229,7 @@ void WS2812FX::setColors(uint8_t seg, uint32_t* c) {
 
 void WS2812FX::setBrightness(uint8_t b) {
   b = constrain(b, BRIGHTNESS_MIN, BRIGHTNESS_MAX);
-  FastLED.setBrightness(b)
+  FastLED.setBrightness(b);
   show();
 }
 
@@ -361,6 +348,14 @@ void WS2812FX::setNumSegments(uint8_t n) {
   _num_segments = n;
 }
 
+uint8_t WS2812FX::getBrightness(void) {
+  return FastLED.getBrightness();
+}
+
+uint32_t WS2812FX::getPixelColor(uint16_t n) {
+  return ledArray[n];
+}
+
 uint32_t WS2812FX::getColor(void) {
   return getColor(0);
 }
@@ -405,43 +400,12 @@ const __FlashStringHelper* WS2812FX::getModeName(uint8_t m) {
   }
 }
 
-void WS2812FX::setSegment(uint8_t pin, uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, bool reverse) {
-  uint32_t colors[] = {color, 0, 0};
-  setSegment(pin, n, start, stop, mode, colors, speed, reverse);
-}
-
-void WS2812FX::setSegment(uint8_t pin, uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, uint8_t options) {
-  uint32_t colors[] = {color, 0, 0};
-  setSegment(pin, n, start, stop, mode, colors, speed, options);
-}
-
-void WS2812FX::setSegment(uint8_t pin, uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse) {
-  setSegment(pin, n, start, stop, mode, colors, speed, (uint8_t)(reverse ? REVERSE : NO_OPTIONS));
-}
-
-void WS2812FX::setSegment(uint8_t pin, uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, uint8_t options) {
-  if(n < (sizeof(_segments) / sizeof(_segments[0]))) {
-    if(n + 1 > _num_segments) _num_segments = n + 1;
-    _segments[n].pin = pin;
-    _segments[n].start = start;
-    _segments[n].stop = stop;
-    _segments[n].mode = mode;
-    _segments[n].speed = speed;
-    _segments[n].options = options;
-
-    for(uint8_t i=0; i<NUM_COLORS; i++) {
-      _segments[n].colors[i] = colors[i];
-    }
-    FastLED.addLeds<LED_TYPE, pin>(ledArray, start, stop);
-  }
-}
-
 void WS2812FX::resetSegments() {
   resetSegmentRuntimes();
   memset(_segments, 0, sizeof(_segments));
   _segment_index = 0;
   _num_segments = 1;
-  setSegment(6, 0, 0, 7, FX_MODE_STATIC, (const uint32_t[]){DEFAULT_COLOR, 0, 0}, DEFAULT_SPEED, NO_OPTIONS);
+  setSegment<(uint8_t) 12>(0, 0, 7, FX_MODE_STATIC, (const uint32_t[]){DEFAULT_COLOR, 0, 0}, DEFAULT_SPEED, NO_OPTIONS);
 }
 
 void WS2812FX::resetSegmentRuntimes() {
@@ -462,8 +426,10 @@ void WS2812FX::resetSegmentRuntime(uint8_t seg) {
  * Turns everything off. Doh.
  */
 void WS2812FX::strip_off() {
-  for (int i = 0; i < getLength(); i++) {
-      ledArray[i] = CRGB::BLACK;
+  uint16_t length = getLength();
+  for (int i = 0; i < length; i++) {
+    // TODO: Change to crgb
+      ledArray[i] = BLACK;
   }
   // Adafruit_NeoPixel::clear();
   show();
@@ -897,7 +863,7 @@ uint16_t WS2812FX::mode_running_lights(void) {
   uint8_t size = 1 << SIZE_OPTION;
   uint8_t sineIncr = max(1, (256 / SEGMENT_LENGTH) * size);
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
-    int lum = (int)sine8(((i + SEGMENT_RUNTIME.counter_mode_step) * sineIncr));
+    int lum = (int)sin8(((i + SEGMENT_RUNTIME.counter_mode_step) * sineIncr));
     if(IS_REVERSE) {
       setPixelColor(SEGMENT.start + i, (r * lum) / 256, (g * lum) / 256, (b * lum) / 256, (w * lum) / 256);
     } else {
