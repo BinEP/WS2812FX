@@ -96,15 +96,15 @@ void WS2812FX::service() {
 void WS2812FX::setPixelColor(uint16_t n, uint32_t c) {
   if(IS_GAMMA) {
     uint8_t w = (c >> 24) & 0xFF;
-    uint8_t r = (c >> 16) & 0xFF;
-    uint8_t g = (c >>  8) & 0xFF;
+    uint8_t g = (c >> 16) & 0xFF;
+    uint8_t r = (c >>  8) & 0xFF;
     uint8_t b =  c        & 0xFF;
     ledArray[n].setRGB(gamma8(r), gamma8(g), gamma8(b));
     // Adafruit_NeoPixel::setPixelColor(n, gamma8(r), gamma8(g), gamma8(b), gamma8(w));
   } else {
     uint8_t w = (c >> 24) & 0xFF;
-    uint8_t r = (c >> 16) & 0xFF;
-    uint8_t g = (c >>  8) & 0xFF;
+    uint8_t g = (c >> 16) & 0xFF;
+    uint8_t r = (c >>  8) & 0xFF;
     uint8_t b =  c        & 0xFF;
     ledArray[n].setRGB(r, g, b);
     // Adafruit_NeoPixel::setPixelColor(n, c);
@@ -121,7 +121,7 @@ void WS2812FX::setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b) {
   }
 }
 
-// We ignore the W channel like adafruit neopixel does
+// We ignore the W channel like
 void WS2812FX::setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
   if(IS_GAMMA) {
     ledArray[n].setRGB(gamma8(r), gamma8(g), gamma8(b));
@@ -204,11 +204,11 @@ void WS2812FX::decreaseSpeed(uint8_t s) {
 }
 
 void WS2812FX::setColor(uint8_t r, uint8_t g, uint8_t b) {
-  setColor(((uint32_t)r << 16) | ((uint32_t)g << 8) | b);
+  setColor(((uint32_t)g << 16) | ((uint32_t)r << 8) | b);
 }
 
 void WS2812FX::setColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w) {
-  setColor((((uint32_t)w << 24)| ((uint32_t)r << 16) | ((uint32_t)g << 8)| ((uint32_t)b)));
+  setColor((((uint32_t)w << 24)| ((uint32_t)g << 16) | ((uint32_t)r << 8)| ((uint32_t)b)));
 }
 
 void WS2812FX::setColor(uint32_t c) {
@@ -728,8 +728,8 @@ uint16_t WS2812FX::mode_breath(void) {
 
   uint32_t color = SEGMENT.colors[0];
   uint8_t w = (color >> 24 & 0xFF) * lum / 256;
-  uint8_t r = (color >> 16 & 0xFF) * lum / 256;
-  uint8_t g = (color >>  8 & 0xFF) * lum / 256;
+  uint8_t g = (color >> 16 & 0xFF) * lum / 256;
+  uint8_t r = (color >>  8 & 0xFF) * lum / 256;
   uint8_t b = (color       & 0xFF) * lum / 256;
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
     setPixelColor(i, r, g, b, w);
@@ -856,8 +856,8 @@ uint16_t WS2812FX::mode_theater_chase_rainbow(void) {
  */
 uint16_t WS2812FX::mode_running_lights(void) {
   uint8_t w = ((SEGMENT.colors[0] >> 24) & 0xFF);
-  uint8_t r = ((SEGMENT.colors[0] >> 16) & 0xFF);
-  uint8_t g = ((SEGMENT.colors[0] >>  8) & 0xFF);
+  uint8_t g = ((SEGMENT.colors[0] >> 16) & 0xFF);
+  uint8_t r = ((SEGMENT.colors[0] >>  8) & 0xFF);
   uint8_t b =  (SEGMENT.colors[0]        & 0xFF);
 
   uint8_t size = 1 << SIZE_OPTION;
@@ -928,8 +928,8 @@ void WS2812FX::fade_out(uint32_t targetColor) {
 
   uint32_t color = targetColor;
   int w2 = (color >> 24) & 0xff;
-  int r2 = (color >> 16) & 0xff;
-  int g2 = (color >>  8) & 0xff;
+  int g2 = (color >> 16) & 0xff;
+  int r2 = (color >>  8) & 0xff;
   int b2 =  color        & 0xff;
 
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
@@ -938,8 +938,8 @@ void WS2812FX::fade_out(uint32_t targetColor) {
       setPixelColor(i, (color >> 1) & 0x7F7F7F7F);
     } else { // new fade-to-color algorithm
       int w1 = (color >> 24) & 0xff;
-      int r1 = (color >> 16) & 0xff;
-      int g1 = (color >>  8) & 0xff;
+      int g1 = (color >> 16) & 0xff;
+      int r1 = (color >>  8) & 0xff;
       int b1 =  color        & 0xff;
 
       // calculate the color differences between the current and target colors
@@ -969,13 +969,13 @@ uint32_t WS2812FX::color_blend(uint32_t color1, uint32_t color2, uint8_t blend) 
   if(blend == 255) return color2;
 
   uint8_t w1 = (color1 >> 24) & 0xff;
-  uint8_t r1 = (color1 >> 16) & 0xff;
-  uint8_t g1 = (color1 >>  8) & 0xff;
+  uint8_t g1 = (color1 >> 16) & 0xff;
+  uint8_t r1 = (color1 >>  8) & 0xff;
   uint8_t b1 =  color1        & 0xff;
 
   uint8_t w2 = (color2 >> 24) & 0xff;
-  uint8_t r2 = (color2 >> 16) & 0xff;
-  uint8_t g2 = (color2 >>  8) & 0xff;
+  uint8_t g2 = (color2 >> 16) & 0xff;
+  uint8_t r2 = (color2 >>  8) & 0xff;
   uint8_t b2 =  color2        & 0xff;
 
   uint32_t w3 = ((w2 * blend) + (w1 * (255U - blend))) / 256U;
@@ -983,7 +983,7 @@ uint32_t WS2812FX::color_blend(uint32_t color1, uint32_t color2, uint8_t blend) 
   uint32_t g3 = ((g2 * blend) + (g1 * (255U - blend))) / 256U;
   uint32_t b3 = ((b2 * blend) + (b1 * (255U - blend))) / 256U;
 
-  return ((w3 << 24) | (r3 << 16) | (g3 << 8) | (b3));
+  return ((w3 << 24) | (g3 << 16) | (r3 << 8) | (b3));
 }
 
 
@@ -1476,8 +1476,8 @@ uint16_t WS2812FX::mode_fireworks_random(void) {
  */
 uint16_t WS2812FX::fire_flicker(int rev_intensity) {
   byte w = (SEGMENT.colors[0] >> 24) & 0xFF;
-  byte r = (SEGMENT.colors[0] >> 16) & 0xFF;
-  byte g = (SEGMENT.colors[0] >>  8) & 0xFF;
+  byte g = (SEGMENT.colors[0] >> 16) & 0xFF;
+  byte r = (SEGMENT.colors[0] >>  8) & 0xFF;
   byte b = (SEGMENT.colors[0]        & 0xFF);
   byte lum = max(w, max(r, max(g, b))) / rev_intensity;
   for(uint16_t i=SEGMENT.start; i <= SEGMENT.stop; i++) {
