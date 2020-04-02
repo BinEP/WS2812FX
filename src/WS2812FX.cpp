@@ -432,7 +432,7 @@ void WS2812FX::strip_off() {
   uint16_t length = getLength();
   for (int i = 0; i < length; i++) {
     // TODO: Change to crgb
-      ledArray[i].setRGB(BLACK);
+      ledArray[i] = BLACK;
   }
   // Adafruit_NeoPixel::clear();
   show();
