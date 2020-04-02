@@ -60,8 +60,7 @@
 void WS2812FX::init() {
   resetSegmentRuntimes();
   strip_off();
-  numBytes = getLength() * getNumBytesPerPixel();
-  memset(getPixels(), 0, numBytes);
+  
   // Adafruit_NeoPixel::begin();
 }
 
