@@ -59,6 +59,9 @@
 
 void WS2812FX::init() {
   resetSegmentRuntimes();
+  strip_off();
+  numBytes = getLength() * getNumBytesPerPixel();
+  memset(getPixels(), 0, numBytes);
   // Adafruit_NeoPixel::begin();
 }
 
@@ -429,7 +432,7 @@ void WS2812FX::strip_off() {
   uint16_t length = getLength();
   for (int i = 0; i < length; i++) {
     // TODO: Change to crgb
-      ledArray[i] = BLACK;
+      ledArray[i].setRGB(BLACK);
   }
   // Adafruit_NeoPixel::clear();
   show();
