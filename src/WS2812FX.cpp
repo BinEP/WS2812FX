@@ -402,12 +402,42 @@ const __FlashStringHelper* WS2812FX::getModeName(uint8_t m) {
   }
 }
 
+
+void WS2812FX::setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, bool reverse) {
+  uint32_t colors[] = {color, 0, 0};
+  setSegment(n, start, stop, mode, colors, speed, reverse);
+}
+
+void WS2812FX::setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, uint8_t options) {
+  uint32_t colors[] = {color, 0, 0};
+  setSegment(n, start, stop, mode, colors, speed, options);
+}
+
+void WS2812FX::setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse) {
+  setSegment(n, start, stop, mode, colors, speed, (uint8_t)(reverse ? REVERSE : NO_OPTIONS));
+}
+
+void WS2812FX::setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, uint8_t options) {
+  if(n < (sizeof(_segments) / sizeof(_segments[0]))) {
+    if(n + 1 > _num_segments) _num_segments = n + 1;
+    _segments[n].start = start;
+    _segments[n].stop = stop;
+    _segments[n].mode = mode;
+    _segments[n].speed = speed;
+    _segments[n].options = options;
+
+    for(uint8_t i=0; i<NUM_COLORS; i++) {
+      _segments[n].colors[i] = colors[i];
+    }
+  }
+}
+
 void WS2812FX::resetSegments() {
   resetSegmentRuntimes();
   memset(_segments, 0, sizeof(_segments));
   _segment_index = 0;
   _num_segments = 1;
-  setSegment<(uint8_t) 12>(0, 0, 7, FX_MODE_STATIC, (const uint32_t[]){DEFAULT_COLOR, 0, 0}, DEFAULT_SPEED, NO_OPTIONS);
+  setSegment(0, 0, 7, FX_MODE_STATIC, (const uint32_t[]){DEFAULT_COLOR, 0, 0}, DEFAULT_SPEED, NO_OPTIONS);
 }
 
 void WS2812FX::resetSegmentRuntimes() {

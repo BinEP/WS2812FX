@@ -500,6 +500,11 @@ class WS2812FX {
 			decreaseLength(uint16_t s),
 			trigger(void),
 			setNumSegments(uint8_t n),
+			setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color,          uint16_t speed, bool reverse),
+		    setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color,          uint16_t speed, uint8_t options),
+		    setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse),
+		    setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, uint8_t options),
+      
 			resetSegments(),
 			resetSegmentRuntimes(),
 			resetSegmentRuntime(uint8_t),
@@ -509,40 +514,12 @@ class WS2812FX {
 			copyPixels(uint16_t d, uint16_t s, uint16_t c),
 			show(void);
 
-
 			template<uint8_t PIN>
-			void setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, bool reverse) {
-			  uint32_t colors[] = {color, 0, 0};
-			  setSegment<PIN>(n, start, stop, mode, colors, speed, reverse);
-			}
-
-			template<uint8_t PIN>
-			void setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color, uint16_t speed, uint8_t options) {
-			  uint32_t colors[] = {color, 0, 0};
-			  setSegment<PIN>(n, start, stop, mode, colors, speed, options);
-			}
-
-			template<uint8_t PIN>
-			void setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse) {
-			  setSegment<PIN>(n, start, stop, mode, colors, speed, (uint8_t)(reverse ? REVERSE : NO_OPTIONS));
-			}
-
-			template<uint8_t PIN>
-			void setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, uint8_t options) {
-			  if(n < (sizeof(_segments) / sizeof(_segments[0]))) {
-			    if(n + 1 > _num_segments) _num_segments = n + 1;
-			    _segments[n].start = start;
-			    _segments[n].stop = stop;
-			    _segments[n].mode = mode;
-			    _segments[n].speed = speed;
-			    _segments[n].options = options;
-
-			    for(uint8_t i=0; i<NUM_COLORS; i++) {
-			      _segments[n].colors[i] = colors[i];
-			    }
+			void addLeds(uint16_t start, uint16_t stop) {
 			    FastLED.addLeds<WS2812, PIN>(ledArray, start, stop);
-			  }
 			}
+
+
 
 		boolean
 			isRunning(void),
@@ -707,7 +684,7 @@ class WS2812FX {
 		uint8_t _num_segments = 1;
 		segment _segments[MAX_NUM_SEGMENTS] = { // SRAM footprint: 20 bytes per element
 			// start, stop, speed, mode, options, color[]
-			{ 0, 7, DEFAULT_SPEED, FX_MODE_STATIC, NO_OPTIONS, {DEFAULT_COLOR}}
+			{ 0, 7, DEFAULT_SPEED, FX_MODE_STATIC, NO_OPTIONS, {DEFAULT_COLOR, 0, 0}}
 		};
 		segment_runtime _segment_runtimes[MAX_NUM_SEGMENTS]; // SRAM footprint: 16 bytes per element
 };
