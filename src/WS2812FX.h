@@ -1,37 +1,37 @@
 /*
-  WS2812FX.h - Library for WS2812 LED effects.
+	WS2812FX.h - Library for WS2812 LED effects.
 
-  Harm Aldick - 2016
-  www.aldick.org
-  FEATURES
-    * A lot of blinken modes and counting
-    * WS2812FX can be used as drop-in replacement for Adafruit NeoPixel Library
-  NOTES
-    * Uses the Adafruit NeoPixel library. Get it here:
-      https://github.com/adafruit/Adafruit_NeoPixel
-  LICENSE
-  The MIT License (MIT)
-  Copyright (c) 2016  Harm Aldick
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to deal
-  in the Software without restriction, including without limitation the rights
-  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-  THE SOFTWARE.
-  CHANGELOG
-  2016-05-28   Initial beta release
-  2016-06-03   Code cleanup, minor improvements, new modes
-  2016-06-04   2 new fx, fixed setColor (now also resets _mode_color)
-  2017-02-02   added external trigger functionality (e.g. for sound-to-light)
+	Harm Aldick - 2016
+	www.aldick.org
+	FEATURES
+		* A lot of blinken modes and counting
+		* WS2812FX can be used as drop-in replacement for Adafruit NeoPixel Library
+	NOTES
+		* Uses the Adafruit NeoPixel library. Get it here:
+			https://github.com/adafruit/Adafruit_NeoPixel
+	LICENSE
+	The MIT License (MIT)
+	Copyright (c) 2016  Harm Aldick
+	Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+	The above copyright notice and this permission notice shall be included in
+	all copies or substantial portions of the Software.
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	THE SOFTWARE.
+	CHANGELOG
+	2016-05-28   Initial beta release
+	2016-06-03   Code cleanup, minor improvements, new modes
+	2016-06-04   2 new fx, fixed setColor (now also resets _mode_color)
+	2017-02-02   added external trigger functionality (e.g. for sound-to-light)
 */
 
 #ifndef WS2812FX_h
@@ -39,7 +39,9 @@
 
 #define FSH(x) (__FlashStringHelper*)(x)
 
-#include <Adafruit_NeoPixel.h>
+#define FASTLED_ESP32_I2S
+
+#include <FastLED.h>
 
 #define DEFAULT_BRIGHTNESS (uint8_t)50
 #define DEFAULT_MODE       (uint8_t)0
@@ -47,11 +49,11 @@
 #define DEFAULT_COLOR      (uint32_t)0xFF0000
 
 #if defined(ESP8266) || defined(ESP32)
-  //#pragma message("Compiling for ESP")
-  #define SPEED_MIN (uint16_t)2
+	//#pragma message("Compiling for ESP")
+	#define SPEED_MIN (uint16_t)2
 #else
-  //#pragma message("Compiling for Arduino")
-  #define SPEED_MIN (uint16_t)10
+	//#pragma message("Compiling for Arduino")
+	#define SPEED_MIN (uint16_t)10
 #endif
 #define SPEED_MAX (uint16_t)65535
 
@@ -59,7 +61,7 @@
 #define BRIGHTNESS_MAX (uint8_t)255
 
 /* each segment uses 36 bytes of SRAM memory, so if you're application fails because of
-  insufficient memory, decreasing MAX_NUM_SEGMENTS may help */
+	insufficient memory, decreasing MAX_NUM_SEGMENTS may help */
 #define MAX_NUM_SEGMENTS 10
 #define NUM_COLORS        3 /* number of colors per segment */
 #define MAX_CUSTOM_MODES  4
@@ -68,6 +70,20 @@
 #define SEGMENT_LENGTH   (uint16_t)(SEGMENT.stop - SEGMENT.start + 1)
 
 // some common colors
+// #define RED        (uint32_t)0xFF0000
+// #define GREEN      (uint32_t)0x00FF00
+// #define BLUE       (uint32_t)0x0000FF
+// #define WHITE      (uint32_t)0xFFFFFF
+// #define BLACK      (uint32_t)0x000000
+// #define YELLOW     (uint32_t)0xFFFF00
+// #define CYAN       (uint32_t)0x00FFFF
+// #define MAGENTA    (uint32_t)0xFF00FF
+// #define PURPLE     (uint32_t)0x400080
+// #define ORANGE     (uint32_t)0xFF3000
+// #define PINK       (uint32_t)0xFF1493
+// #define ULTRAWHITE (uint32_t)0xFFFFFFFF
+// #define DARK(c)    (uint32_t)((c >> 4) & 0x0f0f0f0f)
+
 #define RED        (uint32_t)0xFF0000
 #define GREEN      (uint32_t)0x00FF00
 #define BLUE       (uint32_t)0x0000FF
@@ -203,6 +219,33 @@
 #define FX_MODE_CUSTOM_16               82  // custom modes need to go at the end
 
 
+
+/* Similar to above, but for an 8-bit gamma-correction table.
+   Copy & paste this snippet into a Python REPL to regenerate:
+import math
+gamma=2.6
+for x in range(256):
+    print("{:3},".format(int(math.pow((x)/255.0,gamma)*255.0+0.5))),
+    if x&15 == 15: print
+*/
+static const uint8_t PROGMEM _NeoPixelGammaTable[256] = {
+    0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+    0,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,
+    1,  1,  1,  1,  2,  2,  2,  2,  2,  2,  2,  2,  3,  3,  3,  3,
+    3,  3,  4,  4,  4,  4,  5,  5,  5,  5,  5,  6,  6,  6,  6,  7,
+    7,  7,  8,  8,  8,  9,  9,  9, 10, 10, 10, 11, 11, 11, 12, 12,
+   13, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18, 19, 19, 20,
+   20, 21, 21, 22, 22, 23, 24, 24, 25, 25, 26, 27, 27, 28, 29, 29,
+   30, 31, 31, 32, 33, 34, 34, 35, 36, 37, 38, 38, 39, 40, 41, 42,
+   42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+   58, 59, 60, 61, 62, 63, 64, 65, 66, 68, 69, 70, 71, 72, 73, 75,
+   76, 77, 78, 80, 81, 82, 84, 85, 86, 88, 89, 90, 92, 93, 94, 96,
+   97, 99,100,102,103,105,106,108,109,111,112,114,115,117,119,120,
+  122,124,125,127,129,130,132,134,136,137,139,141,143,145,146,148,
+  150,152,154,156,158,160,162,164,166,168,170,172,174,176,178,180,
+  182,184,186,188,191,193,195,197,199,202,204,206,209,211,213,215,
+  218,220,223,225,227,230,232,235,237,240,242,245,247,250,252,255};
+
 // create GLOBAL names to allow WS2812FX to compile with sketches and other libs that store strings
 // in PROGMEM (get rid of the "section type conflict with __c" errors once and for all. Amen.)
 const char name_0[] PROGMEM = "Static";
@@ -267,373 +310,409 @@ const char name_58[] PROGMEM = "Custom 2";
 const char name_59[] PROGMEM = "Custom 3";
 
 static const __FlashStringHelper* _names[] = {
-  FSH(name_0),
-  FSH(name_1),
-  FSH(name_2),
-  FSH(name_3),
-  FSH(name_4),
-  FSH(name_5),
-  FSH(name_6),
-  FSH(name_7),
-  FSH(name_8),
-  FSH(name_9),
-  FSH(name_10),
-  FSH(name_11),
-  FSH(name_12),
-  FSH(name_13),
-  FSH(name_14),
-  FSH(name_15),
-  FSH(name_16),
-  FSH(name_17),
-  FSH(name_18),
-  FSH(name_19),
-  FSH(name_20),
-  FSH(name_21),
-  FSH(name_22),
-  FSH(name_23),
-  FSH(name_24),
-  FSH(name_25),
-  FSH(name_26),
-  FSH(name_27),
-  FSH(name_28),
-  FSH(name_29),
-  FSH(name_30),
-  FSH(name_31),
-  FSH(name_32),
-  FSH(name_33),
-  FSH(name_34),
-  FSH(name_35),
-  FSH(name_36),
-  FSH(name_37),
-  FSH(name_38),
-  FSH(name_39),
-  FSH(name_40),
-  FSH(name_41),
-  FSH(name_42),
-  FSH(name_43),
-  FSH(name_44),
-  FSH(name_45),
-  FSH(name_46),
-  FSH(name_47),
-  FSH(name_48),
-  FSH(name_49),
-  FSH(name_50),
-  FSH(name_51),
-  FSH(name_52),
-  FSH(name_53),
-  FSH(name_54),
-  FSH(name_55),
-  FSH(name_56),
-  FSH(name_57),
-  FSH(name_58),
-  FSH(name_59)
+	FSH(name_0),
+	FSH(name_1),
+	FSH(name_2),
+	FSH(name_3),
+	FSH(name_4),
+	FSH(name_5),
+	FSH(name_6),
+	FSH(name_7),
+	FSH(name_8),
+	FSH(name_9),
+	FSH(name_10),
+	FSH(name_11),
+	FSH(name_12),
+	FSH(name_13),
+	FSH(name_14),
+	FSH(name_15),
+	FSH(name_16),
+	FSH(name_17),
+	FSH(name_18),
+	FSH(name_19),
+	FSH(name_20),
+	FSH(name_21),
+	FSH(name_22),
+	FSH(name_23),
+	FSH(name_24),
+	FSH(name_25),
+	FSH(name_26),
+	FSH(name_27),
+	FSH(name_28),
+	FSH(name_29),
+	FSH(name_30),
+	FSH(name_31),
+	FSH(name_32),
+	FSH(name_33),
+	FSH(name_34),
+	FSH(name_35),
+	FSH(name_36),
+	FSH(name_37),
+	FSH(name_38),
+	FSH(name_39),
+	FSH(name_40),
+	FSH(name_41),
+	FSH(name_42),
+	FSH(name_43),
+	FSH(name_44),
+	FSH(name_45),
+	FSH(name_46),
+	FSH(name_47),
+	FSH(name_48),
+	FSH(name_49),
+	FSH(name_50),
+	FSH(name_51),
+	FSH(name_52),
+	FSH(name_53),
+	FSH(name_54),
+	FSH(name_55),
+	FSH(name_56),
+	FSH(name_57),
+	FSH(name_58),
+	FSH(name_59)
 };
 
-class WS2812FX : public Adafruit_NeoPixel {
+class WS2812FX {
 
-  typedef uint16_t (WS2812FX::*mode_ptr)(void);
-  
-  // segment parameters
-  public:
-    typedef struct Segment { // 20 bytes
-      uint16_t start;
-      uint16_t stop;
-      uint16_t speed;
-      uint8_t  mode;
-      uint8_t  options;
-      uint32_t colors[NUM_COLORS];
-    } segment;
+	typedef uint16_t (WS2812FX::*mode_ptr)(void);
+	
+	// segment parameters
+	public:
+		typedef struct Segment { // 20 bytes
+			uint16_t start;
+			uint16_t stop;
+			uint16_t speed;
+			uint8_t  mode;
+			uint8_t  options;
+			uint32_t colors[NUM_COLORS];
+		} segment;
 
-  // segment runtime parameters
-    typedef struct Segment_runtime { // 16 bytes
-      unsigned long next_time;
-      uint32_t counter_mode_step;
-      uint32_t counter_mode_call;
-      uint8_t aux_param;   // auxilary param (usually stores a color_wheel index)
-      uint8_t aux_param2;  // auxilary param (usually stores bitwise options)
-      uint16_t aux_param3; // auxilary param (usually stores a segment index)
-    } segment_runtime;
+	// segment runtime parameters
+		typedef struct Segment_runtime { // 16 bytes
+			unsigned long next_time;
+			uint32_t counter_mode_step;
+			uint32_t counter_mode_call;
+			uint8_t aux_param;   // auxilary param (usually stores a color_wheel index)
+			uint8_t aux_param2;  // auxilary param (usually stores bitwise options)
+			uint16_t aux_param3; // auxilary param (usually stores a segment index)
+		} segment_runtime;
 
-    WS2812FX(uint16_t n, uint8_t p, neoPixelType t) : Adafruit_NeoPixel(n, p, t) {
-      _mode[FX_MODE_STATIC]                  = &WS2812FX::mode_static;
-      _mode[FX_MODE_BLINK]                   = &WS2812FX::mode_blink;
-      _mode[FX_MODE_COLOR_WIPE]              = &WS2812FX::mode_color_wipe;
-      _mode[FX_MODE_COLOR_WIPE_INV]          = &WS2812FX::mode_color_wipe_inv;
-      _mode[FX_MODE_COLOR_WIPE_REV]          = &WS2812FX::mode_color_wipe_rev;
-      _mode[FX_MODE_COLOR_WIPE_REV_INV]      = &WS2812FX::mode_color_wipe_rev_inv;
-      _mode[FX_MODE_COLOR_WIPE_RANDOM]       = &WS2812FX::mode_color_wipe_random;
-      _mode[FX_MODE_RANDOM_COLOR]            = &WS2812FX::mode_random_color;
-      _mode[FX_MODE_SINGLE_DYNAMIC]          = &WS2812FX::mode_single_dynamic;
-      _mode[FX_MODE_MULTI_DYNAMIC]           = &WS2812FX::mode_multi_dynamic;
-      _mode[FX_MODE_RAINBOW]                 = &WS2812FX::mode_rainbow;
-      _mode[FX_MODE_RAINBOW_CYCLE]           = &WS2812FX::mode_rainbow_cycle;
-      _mode[FX_MODE_SCAN]                    = &WS2812FX::mode_scan;
-      _mode[FX_MODE_DUAL_SCAN]               = &WS2812FX::mode_dual_scan;
-      _mode[FX_MODE_FADE]                    = &WS2812FX::mode_fade;
-      _mode[FX_MODE_THEATER_CHASE]           = &WS2812FX::mode_theater_chase;
-      _mode[FX_MODE_THEATER_CHASE_RAINBOW]   = &WS2812FX::mode_theater_chase_rainbow;
-      _mode[FX_MODE_TWINKLE]                 = &WS2812FX::mode_twinkle;
-      _mode[FX_MODE_TWINKLE_RANDOM]          = &WS2812FX::mode_twinkle_random;
-      _mode[FX_MODE_TWINKLE_FADE]            = &WS2812FX::mode_twinkle_fade;
-      _mode[FX_MODE_TWINKLE_FADE_RANDOM]     = &WS2812FX::mode_twinkle_fade_random;
-      _mode[FX_MODE_SPARKLE]                 = &WS2812FX::mode_sparkle;
-      _mode[FX_MODE_FLASH_SPARKLE]           = &WS2812FX::mode_flash_sparkle;
-      _mode[FX_MODE_HYPER_SPARKLE]           = &WS2812FX::mode_hyper_sparkle;
-      _mode[FX_MODE_STROBE]                  = &WS2812FX::mode_strobe;
-      _mode[FX_MODE_STROBE_RAINBOW]          = &WS2812FX::mode_strobe_rainbow;
-      _mode[FX_MODE_MULTI_STROBE]            = &WS2812FX::mode_multi_strobe;
-      _mode[FX_MODE_BLINK_RAINBOW]           = &WS2812FX::mode_blink_rainbow;
-      _mode[FX_MODE_CHASE_WHITE]             = &WS2812FX::mode_chase_white;
-      _mode[FX_MODE_CHASE_COLOR]             = &WS2812FX::mode_chase_color;
-      _mode[FX_MODE_CHASE_RANDOM]            = &WS2812FX::mode_chase_random;
-      _mode[FX_MODE_CHASE_RAINBOW]           = &WS2812FX::mode_chase_rainbow;
-      _mode[FX_MODE_CHASE_FLASH]             = &WS2812FX::mode_chase_flash;
-      _mode[FX_MODE_CHASE_FLASH_RANDOM]      = &WS2812FX::mode_chase_flash_random;
-      _mode[FX_MODE_CHASE_RAINBOW_WHITE]     = &WS2812FX::mode_chase_rainbow_white;
-      _mode[FX_MODE_CHASE_BLACKOUT]          = &WS2812FX::mode_chase_blackout;
-      _mode[FX_MODE_CHASE_BLACKOUT_RAINBOW]  = &WS2812FX::mode_chase_blackout_rainbow;
-      _mode[FX_MODE_COLOR_SWEEP_RANDOM]      = &WS2812FX::mode_color_sweep_random;
-      _mode[FX_MODE_RUNNING_COLOR]           = &WS2812FX::mode_running_color;
-      _mode[FX_MODE_RUNNING_RED_BLUE]        = &WS2812FX::mode_running_red_blue;
-      _mode[FX_MODE_RUNNING_RANDOM]          = &WS2812FX::mode_running_random;
-      _mode[FX_MODE_LARSON_SCANNER]          = &WS2812FX::mode_larson_scanner;
-      _mode[FX_MODE_COMET]                   = &WS2812FX::mode_comet;
-      _mode[FX_MODE_FIREWORKS]               = &WS2812FX::mode_fireworks;
-      _mode[FX_MODE_FIREWORKS_RANDOM]        = &WS2812FX::mode_fireworks_random;
-      _mode[FX_MODE_MERRY_CHRISTMAS]         = &WS2812FX::mode_merry_christmas;
-      _mode[FX_MODE_FIRE_FLICKER]            = &WS2812FX::mode_fire_flicker;
-      _mode[FX_MODE_FIRE_FLICKER_SOFT]       = &WS2812FX::mode_fire_flicker_soft;
-      _mode[FX_MODE_FIRE_FLICKER_INTENSE]    = &WS2812FX::mode_fire_flicker_intense;
-      _mode[FX_MODE_CIRCUS_COMBUSTUS]        = &WS2812FX::mode_circus_combustus;
-      _mode[FX_MODE_HALLOWEEN]               = &WS2812FX::mode_halloween;
-      _mode[FX_MODE_BICOLOR_CHASE]           = &WS2812FX::mode_bicolor_chase;
-      _mode[FX_MODE_TRICOLOR_CHASE]          = &WS2812FX::mode_tricolor_chase;
+
+		WS2812FX(struct CRGB* leds, uint16_t numLeds) {
+
+			_mode[FX_MODE_STATIC]                  = &WS2812FX::mode_static;
+			_mode[FX_MODE_BLINK]                   = &WS2812FX::mode_blink;
+			_mode[FX_MODE_COLOR_WIPE]              = &WS2812FX::mode_color_wipe;
+			_mode[FX_MODE_COLOR_WIPE_INV]          = &WS2812FX::mode_color_wipe_inv;
+			_mode[FX_MODE_COLOR_WIPE_REV]          = &WS2812FX::mode_color_wipe_rev;
+			_mode[FX_MODE_COLOR_WIPE_REV_INV]      = &WS2812FX::mode_color_wipe_rev_inv;
+			_mode[FX_MODE_COLOR_WIPE_RANDOM]       = &WS2812FX::mode_color_wipe_random;
+			_mode[FX_MODE_RANDOM_COLOR]            = &WS2812FX::mode_random_color;
+			_mode[FX_MODE_SINGLE_DYNAMIC]          = &WS2812FX::mode_single_dynamic;
+			_mode[FX_MODE_MULTI_DYNAMIC]           = &WS2812FX::mode_multi_dynamic;
+			_mode[FX_MODE_RAINBOW]                 = &WS2812FX::mode_rainbow;
+			_mode[FX_MODE_RAINBOW_CYCLE]           = &WS2812FX::mode_rainbow_cycle;
+			_mode[FX_MODE_SCAN]                    = &WS2812FX::mode_scan;
+			_mode[FX_MODE_DUAL_SCAN]               = &WS2812FX::mode_dual_scan;
+			_mode[FX_MODE_FADE]                    = &WS2812FX::mode_fade;
+			_mode[FX_MODE_THEATER_CHASE]           = &WS2812FX::mode_theater_chase;
+			_mode[FX_MODE_THEATER_CHASE_RAINBOW]   = &WS2812FX::mode_theater_chase_rainbow;
+			_mode[FX_MODE_TWINKLE]                 = &WS2812FX::mode_twinkle;
+			_mode[FX_MODE_TWINKLE_RANDOM]          = &WS2812FX::mode_twinkle_random;
+			_mode[FX_MODE_TWINKLE_FADE]            = &WS2812FX::mode_twinkle_fade;
+			_mode[FX_MODE_TWINKLE_FADE_RANDOM]     = &WS2812FX::mode_twinkle_fade_random;
+			_mode[FX_MODE_SPARKLE]                 = &WS2812FX::mode_sparkle;
+			_mode[FX_MODE_FLASH_SPARKLE]           = &WS2812FX::mode_flash_sparkle;
+			_mode[FX_MODE_HYPER_SPARKLE]           = &WS2812FX::mode_hyper_sparkle;
+			_mode[FX_MODE_STROBE]                  = &WS2812FX::mode_strobe;
+			_mode[FX_MODE_STROBE_RAINBOW]          = &WS2812FX::mode_strobe_rainbow;
+			_mode[FX_MODE_MULTI_STROBE]            = &WS2812FX::mode_multi_strobe;
+			_mode[FX_MODE_BLINK_RAINBOW]           = &WS2812FX::mode_blink_rainbow;
+			_mode[FX_MODE_CHASE_WHITE]             = &WS2812FX::mode_chase_white;
+			_mode[FX_MODE_CHASE_COLOR]             = &WS2812FX::mode_chase_color;
+			_mode[FX_MODE_CHASE_RANDOM]            = &WS2812FX::mode_chase_random;
+			_mode[FX_MODE_CHASE_RAINBOW]           = &WS2812FX::mode_chase_rainbow;
+			_mode[FX_MODE_CHASE_FLASH]             = &WS2812FX::mode_chase_flash;
+			_mode[FX_MODE_CHASE_FLASH_RANDOM]      = &WS2812FX::mode_chase_flash_random;
+			_mode[FX_MODE_CHASE_RAINBOW_WHITE]     = &WS2812FX::mode_chase_rainbow_white;
+			_mode[FX_MODE_CHASE_BLACKOUT]          = &WS2812FX::mode_chase_blackout;
+			_mode[FX_MODE_CHASE_BLACKOUT_RAINBOW]  = &WS2812FX::mode_chase_blackout_rainbow;
+			_mode[FX_MODE_COLOR_SWEEP_RANDOM]      = &WS2812FX::mode_color_sweep_random;
+			_mode[FX_MODE_RUNNING_COLOR]           = &WS2812FX::mode_running_color;
+			_mode[FX_MODE_RUNNING_RED_BLUE]        = &WS2812FX::mode_running_red_blue;
+			_mode[FX_MODE_RUNNING_RANDOM]          = &WS2812FX::mode_running_random;
+			_mode[FX_MODE_LARSON_SCANNER]          = &WS2812FX::mode_larson_scanner;
+			_mode[FX_MODE_COMET]                   = &WS2812FX::mode_comet;
+			_mode[FX_MODE_FIREWORKS]               = &WS2812FX::mode_fireworks;
+			_mode[FX_MODE_FIREWORKS_RANDOM]        = &WS2812FX::mode_fireworks_random;
+			_mode[FX_MODE_MERRY_CHRISTMAS]         = &WS2812FX::mode_merry_christmas;
+			_mode[FX_MODE_FIRE_FLICKER]            = &WS2812FX::mode_fire_flicker;
+			_mode[FX_MODE_FIRE_FLICKER_SOFT]       = &WS2812FX::mode_fire_flicker_soft;
+			_mode[FX_MODE_FIRE_FLICKER_INTENSE]    = &WS2812FX::mode_fire_flicker_intense;
+			_mode[FX_MODE_CIRCUS_COMBUSTUS]        = &WS2812FX::mode_circus_combustus;
+			_mode[FX_MODE_HALLOWEEN]               = &WS2812FX::mode_halloween;
+			_mode[FX_MODE_BICOLOR_CHASE]           = &WS2812FX::mode_bicolor_chase;
+			_mode[FX_MODE_TRICOLOR_CHASE]          = &WS2812FX::mode_tricolor_chase;
 // if flash memory is constrained (I'm looking at you Arduino Nano), replace modes
 // that use a lot of flash with mode_static (reduces flash footprint by about 2100 bytes)
 #ifdef REDUCED_MODES
-      _mode[FX_MODE_BREATH]                  = &WS2812FX::mode_static;
-      _mode[FX_MODE_RUNNING_LIGHTS]          = &WS2812FX::mode_static;
-      _mode[FX_MODE_ICU]                     = &WS2812FX::mode_static;
+			_mode[FX_MODE_BREATH]                  = &WS2812FX::mode_static;
+			_mode[FX_MODE_RUNNING_LIGHTS]          = &WS2812FX::mode_static;
+			_mode[FX_MODE_ICU]                     = &WS2812FX::mode_static;
 #else
-      _mode[FX_MODE_BREATH]                  = &WS2812FX::mode_breath;
-      _mode[FX_MODE_RUNNING_LIGHTS]          = &WS2812FX::mode_running_lights;
-      _mode[FX_MODE_ICU]                     = &WS2812FX::mode_icu;
+			_mode[FX_MODE_BREATH]                  = &WS2812FX::mode_breath;
+			_mode[FX_MODE_RUNNING_LIGHTS]          = &WS2812FX::mode_running_lights;
+			_mode[FX_MODE_ICU]                     = &WS2812FX::mode_icu;
 #endif
-      _mode[FX_MODE_CUSTOM_0]                = &WS2812FX::mode_custom_0;
-      _mode[FX_MODE_CUSTOM_1]                = &WS2812FX::mode_custom_1;
-      _mode[FX_MODE_CUSTOM_2]                = &WS2812FX::mode_custom_2;
-      _mode[FX_MODE_CUSTOM_3]                = &WS2812FX::mode_custom_3;
+			_mode[FX_MODE_CUSTOM_0]                = &WS2812FX::mode_custom_0;
+			_mode[FX_MODE_CUSTOM_1]                = &WS2812FX::mode_custom_1;
+			_mode[FX_MODE_CUSTOM_2]                = &WS2812FX::mode_custom_2;
+			_mode[FX_MODE_CUSTOM_3]                = &WS2812FX::mode_custom_3;
 
-      brightness = DEFAULT_BRIGHTNESS + 1; // Adafruit_NeoPixel internally offsets brightness by 1
-      _running = false;
-      _num_segments = 1;
-      _segments[0].mode = DEFAULT_MODE;
-      _segments[0].colors[0] = DEFAULT_COLOR;
-      _segments[0].start = 0;
-      _segments[0].stop = n - 1;
-      _segments[0].speed = DEFAULT_SPEED;
-      resetSegmentRuntimes();
-    }
+			numLEDs = numLeds;
+			ledArray = leds;
+			numBytes = sizeof(ledArray[0]) * numLeds;
+			FastLED.setBrightness(DEFAULT_BRIGHTNESS);
+			_running = false;
+			_num_segments = 1;
+			_segments[0].mode = DEFAULT_MODE;
+			_segments[0].colors[0] = DEFAULT_COLOR;
+			_segments[0].start = 0;
+			_segments[0].stop = numLeds - 1;
+			_segments[0].speed = DEFAULT_SPEED;
+			resetSegmentRuntimes();
+		}
 
-    void
+		WS2812FX(void) {
+			numLEDs = 0;
+			ledArray = NULL;
+			numBytes = 0;
+		}
+
+		~WS2812FX() {
+
+		}
+
+		void
 //    timer(void),
-      init(void),
-      service(void),
-      start(void),
-      stop(void),
-      pause(void),
-      resume(void),
-      strip_off(void),
-      fade_out(void),
-      fade_out(uint32_t),
-      setMode(uint8_t m),
-      setMode(uint8_t seg, uint8_t m),
-      setOptions(uint8_t seg, uint8_t o),
-      setCustomMode(uint16_t (*p)()),
-      setCustomShow(void (*p)()),
-      setSpeed(uint16_t s),
-      setSpeed(uint8_t seg, uint16_t s),
-      increaseSpeed(uint8_t s),
-      decreaseSpeed(uint8_t s),
-      setColor(uint8_t r, uint8_t g, uint8_t b),
-      setColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w),
-      setColor(uint32_t c),
-      setColor(uint8_t seg, uint32_t c),
-      setColors(uint8_t seg, uint32_t* c),
-      setBrightness(uint8_t b),
-      increaseBrightness(uint8_t s),
-      decreaseBrightness(uint8_t s),
-      setLength(uint16_t b),
-      increaseLength(uint16_t s),
-      decreaseLength(uint16_t s),
-      trigger(void),
-      setNumSegments(uint8_t n),
-      setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color,          uint16_t speed, bool reverse),
-      setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color,          uint16_t speed, uint8_t options),
-      setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse),
-      setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, uint8_t options),
-      resetSegments(),
-      resetSegmentRuntimes(),
-      resetSegmentRuntime(uint8_t),
-      setPixelColor(uint16_t n, uint32_t c),
-      setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b),
-      setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_t w),
-      copyPixels(uint16_t d, uint16_t s, uint16_t c),
-      show(void);
+			init(void),
+			service(void),
+			start(void),
+			stop(void),
+			pause(void),
+			resume(void),
+			strip_off(void),
+			fade_out(void),
+			fade_out(uint32_t),
+			setMode(uint8_t m),
+			setMode(uint8_t seg, uint8_t m),
+			setOptions(uint8_t seg, uint8_t o),
+			setCustomMode(uint16_t (*p)()),
+			setCustomShow(void (*p)()),
+			setSpeed(uint16_t s),
+			setSpeed(uint8_t seg, uint16_t s),
+			increaseSpeed(uint8_t s),
+			decreaseSpeed(uint8_t s),
+			setColor(uint8_t r, uint8_t g, uint8_t b),
+			setColor(uint8_t r, uint8_t g, uint8_t b, uint8_t w),
+			setColor(uint32_t c),
+			setColor(uint8_t seg, uint32_t c),
+			setColors(uint8_t seg, uint32_t* c),
+			setBrightness(uint8_t b),
+			increaseBrightness(uint8_t s),
+			decreaseBrightness(uint8_t s),
+			setLength(uint16_t b),
+			increaseLength(uint16_t s),
+			decreaseLength(uint16_t s),
+			trigger(void),
+			setNumSegments(uint8_t n),
+			setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color,          uint16_t speed, bool reverse),
+		    setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, uint32_t color,          uint16_t speed, uint8_t options),
+		    setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, bool reverse),
+		    setSegment(uint8_t n, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed, uint8_t options),
+      
+			resetSegments(),
+			resetSegmentRuntimes(),
+			resetSegmentRuntime(uint8_t),
+			setPixelColor(uint16_t n, uint32_t c),
+			setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b),
+			setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_t w),
+			copyPixels(uint16_t d, uint16_t s, uint16_t c),
+			show(void);
 
-    boolean
-      isRunning(void),
-      isTriggered(void),
-      isFrame(void),
-      isFrame(uint8_t),
-      isCycle(void),
-      isCycle(uint8_t);
+			template<uint8_t PIN>
+			void addLeds(uint16_t start, uint16_t stop) {
+			    FastLED.addLeds<WS2812, PIN>(ledArray, start, stop);
+			}
 
-    uint8_t
-      random8(void),
-      random8(uint8_t),
-      getMode(void),
-      getMode(uint8_t),
-      getModeCount(void),
-      setCustomMode(const __FlashStringHelper* name, uint16_t (*p)()),
-      setCustomMode(uint8_t i, const __FlashStringHelper* name, uint16_t (*p)()),
-      getNumSegments(void),
-      get_random_wheel_index(uint8_t),
-      getOptions(uint8_t),
-      getNumBytesPerPixel(void);
 
-    uint16_t
-      random16(void),
-      random16(uint16_t),
-      getSpeed(void),
-      getSpeed(uint8_t),
-      getLength(void),
-      getNumBytes(void);
 
-    uint32_t
-      color_wheel(uint8_t),
-      getColor(void),
-      getColor(uint8_t),
-      intensitySum(void);
+		boolean
+			isRunning(void),
+			isTriggered(void),
+			isFrame(void),
+			isFrame(uint8_t),
+			isCycle(void),
+			isCycle(uint8_t);
 
-    uint32_t* getColors(uint8_t);
-    uint32_t* intensitySums(void);
+		uint8_t
+			random8(void),
+			random8(uint8_t),
+			getMode(void),
+			getMode(uint8_t),
+			getBrightness(void),
+			getModeCount(void),
+			setCustomMode(const __FlashStringHelper* name, uint16_t (*p)()),
+			setCustomMode(uint8_t i, const __FlashStringHelper* name, uint16_t (*p)()),
+			getNumSegments(void),
+			get_random_wheel_index(uint8_t),
+			getOptions(uint8_t),
+			getNumBytesPerPixel(void);
 
-    const __FlashStringHelper* getModeName(uint8_t m);
+		uint8_t* getPixels(void);
 
-    WS2812FX::Segment* getSegment(void);
+		uint16_t
+			random16(void),
+			random16(uint16_t),
+			getSpeed(void),
+			getSpeed(uint8_t),
+			getLength(void),
+			getNumBytes(void);
 
-    WS2812FX::Segment* getSegment(uint8_t);
+		uint32_t
+			color_wheel(uint8_t),
+			getColor(void),
+			getPixelColor(uint16_t n),
+			getColor(uint8_t),
+			intensitySum(void);
 
-    WS2812FX::Segment* getSegments(void);
 
-    WS2812FX::Segment_runtime* getSegmentRuntime(void);
+		static uint8_t    gamma8(uint8_t x) {
+			return pgm_read_byte(&_NeoPixelGammaTable[x]); // 0-255 in, 0-255 out
+		}
 
-    WS2812FX::Segment_runtime* getSegmentRuntime(uint8_t);
+		uint32_t* getColors(uint8_t);
+		uint32_t* intensitySums(void);
 
-    WS2812FX::Segment_runtime* getSegmentRuntimes(void);
+		const __FlashStringHelper* getModeName(uint8_t m);
 
-    // mode helper functions
-    uint16_t
-      blink(uint32_t, uint32_t, bool strobe),
-      color_wipe(uint32_t, uint32_t, bool),
-      twinkle(uint32_t, uint32_t),
-      twinkle_fade(uint32_t),
-      chase(uint32_t, uint32_t, uint32_t),
-      running(uint32_t, uint32_t),
-      fireworks(uint32_t),
-      fire_flicker(int),
-      tricolor_chase(uint32_t, uint32_t, uint32_t),
-      scan(uint32_t, uint32_t, bool);
-    uint32_t
-      color_blend(uint32_t, uint32_t, uint8_t);
+		WS2812FX::Segment* getSegment(void);
 
-    // builtin modes
-    uint16_t
-      mode_static(void),
-      mode_blink(void),
-      mode_blink_rainbow(void),
-      mode_strobe(void),
-      mode_strobe_rainbow(void),
-      mode_color_wipe(void),
-      mode_color_wipe_inv(void),
-      mode_color_wipe_rev(void),
-      mode_color_wipe_rev_inv(void),
-      mode_color_wipe_random(void),
-      mode_color_sweep_random(void),
-      mode_random_color(void),
-      mode_single_dynamic(void),
-      mode_multi_dynamic(void),
-      mode_breath(void),
-      mode_fade(void),
-      mode_scan(void),
-      mode_dual_scan(void),
-      mode_theater_chase(void),
-      mode_theater_chase_rainbow(void),
-      mode_rainbow(void),
-      mode_rainbow_cycle(void),
-      mode_running_lights(void),
-      mode_twinkle(void),
-      mode_twinkle_random(void),
-      mode_twinkle_fade(void),
-      mode_twinkle_fade_random(void),
-      mode_sparkle(void),
-      mode_flash_sparkle(void),
-      mode_hyper_sparkle(void),
-      mode_multi_strobe(void),
-      mode_chase_white(void),
-      mode_chase_color(void),
-      mode_chase_random(void),
-      mode_chase_rainbow(void),
-      mode_chase_flash(void),
-      mode_chase_flash_random(void),
-      mode_chase_rainbow_white(void),
-      mode_chase_blackout(void),
-      mode_chase_blackout_rainbow(void),
-      mode_running_color(void),
-      mode_running_red_blue(void),
-      mode_running_random(void),
-      mode_larson_scanner(void),
-      mode_comet(void),
-      mode_fireworks(void),
-      mode_fireworks_random(void),
-      mode_merry_christmas(void),
-      mode_halloween(void),
-      mode_fire_flicker(void),
-      mode_fire_flicker_soft(void),
-      mode_fire_flicker_intense(void),
-      mode_circus_combustus(void),
-      mode_bicolor_chase(void),
-      mode_tricolor_chase(void),
-      mode_icu(void),
-      mode_custom_0(void),
-      mode_custom_1(void),
-      mode_custom_2(void),
-      mode_custom_3(void);
+		WS2812FX::Segment* getSegment(uint8_t);
 
-  private:
-    uint16_t _rand16seed;
-    uint16_t (*customModes[MAX_CUSTOM_MODES])(void) {
-      []{ return (uint16_t)1000; },
-      []{ return (uint16_t)1000; },
-      []{ return (uint16_t)1000; },
-      []{ return (uint16_t)1000; }
-    };
-    void (*customShow)(void) = NULL;
+		WS2812FX::Segment* getSegments(void);
 
-    boolean
-      _running,
-      _triggered;
+		WS2812FX::Segment_runtime* getSegmentRuntime(void);
 
-    mode_ptr _mode[MODE_COUNT]; // SRAM footprint: 4 bytes per element
+		WS2812FX::Segment_runtime* getSegmentRuntime(uint8_t);
 
-    uint8_t _segment_index = 0;
-    uint8_t _num_segments = 1;
-    segment _segments[MAX_NUM_SEGMENTS] = { // SRAM footprint: 20 bytes per element
-      // start, stop, speed, mode, options, color[]
-      { 0, 7, DEFAULT_SPEED, FX_MODE_STATIC, NO_OPTIONS, {DEFAULT_COLOR}}
-    };
-    segment_runtime _segment_runtimes[MAX_NUM_SEGMENTS]; // SRAM footprint: 16 bytes per element
+		WS2812FX::Segment_runtime* getSegmentRuntimes(void);
+
+		// mode helper functions
+		uint16_t
+			blink(uint32_t, uint32_t, bool strobe),
+			color_wipe(uint32_t, uint32_t, bool),
+			twinkle(uint32_t, uint32_t),
+			twinkle_fade(uint32_t),
+			chase(uint32_t, uint32_t, uint32_t),
+			running(uint32_t, uint32_t),
+			fireworks(uint32_t),
+			fire_flicker(int),
+			tricolor_chase(uint32_t, uint32_t, uint32_t),
+			scan(uint32_t, uint32_t, bool);
+		uint32_t
+			color_blend(uint32_t, uint32_t, uint8_t);
+
+		// builtin modes
+		uint16_t
+			mode_static(void),
+			mode_blink(void),
+			mode_blink_rainbow(void),
+			mode_strobe(void),
+			mode_strobe_rainbow(void),
+			mode_color_wipe(void),
+			mode_color_wipe_inv(void),
+			mode_color_wipe_rev(void),
+			mode_color_wipe_rev_inv(void),
+			mode_color_wipe_random(void),
+			mode_color_sweep_random(void),
+			mode_random_color(void),
+			mode_single_dynamic(void),
+			mode_multi_dynamic(void),
+			mode_breath(void),
+			mode_fade(void),
+			mode_scan(void),
+			mode_dual_scan(void),
+			mode_theater_chase(void),
+			mode_theater_chase_rainbow(void),
+			mode_rainbow(void),
+			mode_rainbow_cycle(void),
+			mode_running_lights(void),
+			mode_twinkle(void),
+			mode_twinkle_random(void),
+			mode_twinkle_fade(void),
+			mode_twinkle_fade_random(void),
+			mode_sparkle(void),
+			mode_flash_sparkle(void),
+			mode_hyper_sparkle(void),
+			mode_multi_strobe(void),
+			mode_chase_white(void),
+			mode_chase_color(void),
+			mode_chase_random(void),
+			mode_chase_rainbow(void),
+			mode_chase_flash(void),
+			mode_chase_flash_random(void),
+			mode_chase_rainbow_white(void),
+			mode_chase_blackout(void),
+			mode_chase_blackout_rainbow(void),
+			mode_running_color(void),
+			mode_running_red_blue(void),
+			mode_running_random(void),
+			mode_larson_scanner(void),
+			mode_comet(void),
+			mode_fireworks(void),
+			mode_fireworks_random(void),
+			mode_merry_christmas(void),
+			mode_halloween(void),
+			mode_fire_flicker(void),
+			mode_fire_flicker_soft(void),
+			mode_fire_flicker_intense(void),
+			mode_circus_combustus(void),
+			mode_bicolor_chase(void),
+			mode_tricolor_chase(void),
+			mode_icu(void),
+			mode_custom_0(void),
+			mode_custom_1(void),
+			mode_custom_2(void),
+			mode_custom_3(void);
+
+	private:
+		// TODO : Make sure this gets set
+		struct CRGB* ledArray;
+		uint16_t numLEDs; //Number of LEDs
+		uint16_t numBytes;	//Size of pixels buffer
+		uint16_t _rand16seed;
+		uint16_t (*customModes[MAX_CUSTOM_MODES])(void) {
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; }
+		};
+		void (*customShow)(void) = NULL;
+
+		boolean
+			_running,
+			_triggered;
+
+		mode_ptr _mode[MODE_COUNT]; // SRAM footprint: 4 bytes per element
+
+		uint8_t _segment_index = 0;
+		uint8_t _num_segments = 1;
+		segment _segments[MAX_NUM_SEGMENTS] = { // SRAM footprint: 20 bytes per element
+			// start, stop, speed, mode, options, color[]
+			{ 0, 7, DEFAULT_SPEED, FX_MODE_STATIC, NO_OPTIONS, {DEFAULT_COLOR, 0, 0}}
+		};
+		segment_runtime _segment_runtimes[MAX_NUM_SEGMENTS]; // SRAM footprint: 16 bytes per element
 };
 
 #endif
