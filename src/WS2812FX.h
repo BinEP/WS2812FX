@@ -78,9 +78,9 @@
 
 /* each segment uses 36 bytes of SRAM memory, so if you're application fails because of
 	insufficient memory, decreasing MAX_NUM_SEGMENTS may help */
-#define MAX_NUM_SEGMENTS 10
+#define MAX_NUM_SEGMENTS 30
 #define NUM_COLORS        3 /* number of colors per segment */
-#define MAX_CUSTOM_MODES  4
+#define MAX_CUSTOM_MODES  17
 #define SEGMENT          _segments[_segment_index]
 #define SEGMENT_RUNTIME  _segment_runtimes[_segment_index]
 #define SEGMENT_LENGTH   (uint16_t)(SEGMENT.stop - SEGMENT.start + 1)
@@ -260,7 +260,6 @@
 #define FX_MODE_CUSTOM_13               108  // custom modes need to go at the end
 #define FX_MODE_CUSTOM_14               109  // custom modes need to go at the end
 #define FX_MODE_CUSTOM_15               110  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_16               111  // custom modes need to go at the end
 
 
 
@@ -424,7 +423,58 @@ static const __FlashStringHelper* _names[] = {
 	FSH(name_56),
 	FSH(name_57),
 	FSH(name_58),
-	FSH(name_59)
+	FSH(name_59),
+	FSH(name_60),
+	FSH(name_61),
+	FSH(name_62),
+	FSH(name_63),
+	FSH(name_64),
+	FSH(name_65),
+	FSH(name_66),
+	FSH(name_67),
+	FSH(name_68),
+	FSH(name_69),
+	FSH(name_70),
+	FSH(name_71),
+	FSH(name_72),
+	FSH(name_73),
+	FSH(name_74),
+	FSH(name_75),
+	FSH(name_76),
+	FSH(name_77),
+	FSH(name_78),
+	FSH(name_79),
+	FSH(name_80),
+	FSH(name_81),
+	FSH(name_82),
+	FSH(name_83),
+	FSH(name_84),
+	FSH(name_85),
+	FSH(name_86),
+	FSH(name_87),
+	FSH(name_88),
+	FSH(name_89),
+	FSH(name_90),
+	FSH(name_91),
+	FSH(name_92),
+	FSH(name_93),
+	FSH(name_94),
+	FSH(name_95),
+	FSH(name_96),
+	FSH(name_97),
+	FSH(name_98),
+	FSH(name_99),
+	FSH(name_100),
+	FSH(name_101),
+	FSH(name_102),
+	FSH(name_103),
+	FSH(name_104),
+	FSH(name_105),
+	FSH(name_106),
+	FSH(name_107),
+	FSH(name_108),
+	FSH(name_109),
+	FSH(name_110)
 };
 
 class WS2812FX {
@@ -748,6 +798,18 @@ class WS2812FX {
 		uint16_t numBytes;	//Size of pixels buffer
 		uint16_t _rand16seed;
 		uint16_t (*customModes[MAX_CUSTOM_MODES])(void) {
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
+			[]{ return (uint16_t)1000; },
 			[]{ return (uint16_t)1000; },
 			[]{ return (uint16_t)1000; },
 			[]{ return (uint16_t)1000; },
