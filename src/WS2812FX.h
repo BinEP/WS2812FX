@@ -39,6 +39,8 @@
 
 #define FSH(x) (__FlashStringHelper*)(x)
 
+#define FASTLED_ESP32_I2S
+
 #include <FastLED.h>
 
 #define DEFAULT_BRIGHTNESS (uint8_t)50
