@@ -42,6 +42,22 @@
 #define FASTLED_ESP32_I2S
 
 #include <FastLED.h>
+// include the custom effects
+#include "custom/BlockDissolve.h"
+#include "custom/DualLarson.h"
+#include "custom/Fillerup.h"
+#include "custom/Heartbeat.h"
+#include "custom/MultiComet.h"
+#include "custom/Oscillate.h"
+#include "custom/Popcorn.h"
+#include "custom/Rain.h"
+#include "custom/RainbowFireworks.h"
+#include "custom/RainbowLarson.h"
+#include "custom/RandomChase.h"
+#include "custom/TriFade.h"
+#include "custom/TwinkleFox.h"
+#include "custom/VUMeter.h"
+
 
 #define DEFAULT_BRIGHTNESS (uint8_t)50
 #define DEFAULT_MODE       (uint8_t)0
@@ -158,65 +174,93 @@
 #define FX_MODE_THEATER_CHASE_RAINBOW   22
 #define FX_MODE_RUNNING_LIGHTS          23
 #define FX_MODE_TWINKLE                 24
-#define FX_MODE_TWINKLE_RANDOM          25
-#define FX_MODE_TWINKLE_FADE            26
-#define FX_MODE_TWINKLE_FADE_RANDOM     27
-#define FX_MODE_SPARKLE                 28
-#define FX_MODE_FLASH_SPARKLE           29
-#define FX_MODE_HYPER_SPARKLE           30
-#define FX_MODE_STROBE                  31
-#define FX_MODE_STROBE_RAINBOW          32
-#define FX_MODE_STROBE_COOL             33
-#define FX_MODE_STROBE_WARM             34
-#define FX_MODE_STROBE_NATURE           35
-#define FX_MODE_STROBE_CANDY            36
-#define FX_MODE_STROBE_CHRISTMAS        37
-#define FX_MODE_MULTI_STROBE            38
-#define FX_MODE_BLINK_RAINBOW           39
-#define FX_MODE_CHASE_WHITE             40
-#define FX_MODE_CHASE_COLOR             41
-#define FX_MODE_CHASE_RANDOM            42
-#define FX_MODE_CHASE_RAINBOW           43
-#define FX_MODE_CHASE_FLASH             44
-#define FX_MODE_CHASE_FLASH_RANDOM      45
-#define FX_MODE_CHASE_RAINBOW_WHITE     46
-#define FX_MODE_CHASE_BLACKOUT          47
-#define FX_MODE_CHASE_BLACKOUT_RAINBOW  48
-#define FX_MODE_COLOR_SWEEP_RANDOM      49
-#define FX_MODE_RUNNING_COLOR           50
-#define FX_MODE_RUNNING_RED_BLUE        51
-#define FX_MODE_RUNNING_RANDOM          52
-#define FX_MODE_LARSON_SCANNER          53
-#define FX_MODE_COMET                   54
-#define FX_MODE_FIREWORKS               55
-#define FX_MODE_FIREWORKS_RANDOM        56
-#define FX_MODE_MERRY_CHRISTMAS         57
-#define FX_MODE_FIRE_FLICKER            58
-#define FX_MODE_FIRE_FLICKER_SOFT       59
-#define FX_MODE_FIRE_FLICKER_INTENSE    60
-#define FX_MODE_CIRCUS_COMBUSTUS        61
-#define FX_MODE_HALLOWEEN               62
-#define FX_MODE_BICOLOR_CHASE           63
-#define FX_MODE_TRICOLOR_CHASE          64
-#define FX_MODE_CANDY_CANE              65
-#define FX_MODE_CUSTOM                  65
-#define FX_MODE_CUSTOM_0                66  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_1                67  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_2                68  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_3                69  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_4                70  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_5                71  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_6                72  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_7                73  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_8                74  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_9                75  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_10               76  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_11               77  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_12               78  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_13               79  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_14               80  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_15               81  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_16               82  // custom modes need to go at the end
+#define FX_MODE_TWINKLE_RAINBOW         25
+#define FX_MODE_TWINKLE_COOL            26
+#define FX_MODE_TWINKLE_WARM            27
+#define FX_MODE_TWINKLE_NATURE          28
+#define FX_MODE_TWINKLE_CANDY           29
+#define FX_MODE_TWINKLE_CHRISTMAS       30
+#define FX_MODE_TWINKLE_RANDOM          31
+#define FX_MODE_TWINKLE_FADE            32
+#define FX_MODE_TWINKLE_FADE_RANDOM     33
+#define FX_MODE_SPARKLE                 34
+#define FX_MODE_SNOW_SPARKLE            35
+#define FX_MODE_FLASH_SPARKLE           36
+#define FX_MODE_HYPER_SPARKLE           37
+#define FX_MODE_STROBE                  38
+#define FX_MODE_STROBE_RAINBOW          39
+#define FX_MODE_STROBE_COOL             40
+#define FX_MODE_STROBE_WARM             41
+#define FX_MODE_STROBE_NATURE           42
+#define FX_MODE_STROBE_CANDY            43
+#define FX_MODE_STROBE_CHRISTMAS        44
+#define FX_MODE_MULTI_STROBE            45
+#define FX_MODE_BLINK_RAINBOW           46
+#define FX_MODE_CHASE_WHITE             47
+#define FX_MODE_CHASE_COLOR             48
+#define FX_MODE_CHASE_RANDOM            49
+#define FX_MODE_CHASE_COOL              50
+#define FX_MODE_CHASE_WARM              51
+#define FX_MODE_CHASE_NATURE            52
+#define FX_MODE_CHASE_CANDY             53
+#define FX_MODE_CHASE_CHRISTMAS         54
+#define FX_MODE_CHASE_FLASH             55
+#define FX_MODE_CHASE_FLASH_RANDOM      56
+#define FX_MODE_CHASE_RAINBOW_WHITE     57
+#define FX_MODE_CHASE_BLACKOUT          58
+#define FX_MODE_CHASE_BLACKOUT_RAINBOW  59
+#define FX_MODE_COLOR_SWEEP_RANDOM      60
+#define FX_MODE_RUNNING_COLOR           61
+#define FX_MODE_RUNNING_RED_BLUE        62
+#define FX_MODE_RUNNING_RANDOM          63
+#define FX_MODE_LARSON_SCANNER          64
+#define FX_MODE_COMET                   65
+#define FX_MODE_FIREWORKS               66
+#define FX_MODE_FIREWORKS_RANDOM        67
+#define FX_MODE_MERRY_CHRISTMAS         68
+#define FX_MODE_FIRE_FLICKER            69
+#define FX_MODE_FIRE_FLICKER_SOFT       70
+#define FX_MODE_FIRE_FLICKER_INTENSE    71
+#define FX_MODE_CIRCUS_COMBUSTUS        72
+#define FX_MODE_HALLOWEEN               73
+#define FX_MODE_BICOLOR_CHASE           74
+#define FX_MODE_TRICOLOR_CHASE          75
+#define FX_MODE_CANDY_CANE              76
+#define FX_MODE_KITT                    77
+#define FX_MODE_BOUNCING_BALLS          78
+#define FX_MODE_BOUNCING_COLORED_BALLS  79
+#define FX_MODE_BLOCK_DISSOLVE          80
+#define FX_MODE_DUAL_LARSON             81
+#define FX_MODE_FILLERUP                82
+#define FX_MODE_HEARTBEAT               83
+#define FX_MODE_MULTI_COMET             84
+#define FX_MODE_OSCILLATE               85
+#define FX_MODE_POPCORN                 86
+#define FX_MODE_RAIN                    87
+#define FX_MODE_RAINBOW_FIREWORKS       88
+#define FX_MODE_RAINBOW_LARSON          89
+#define FX_MODE_RANDOM_CHASE            90
+#define FX_MODE_TRIFADE                 91
+#define FX_MODE_TWINKLE_FOX             92
+#define FX_MODE_VU_METER                93
+#define FX_MODE_CUSTOM                  94
+#define FX_MODE_CUSTOM_0                95  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_1                96  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_2                97  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_3                98  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_4                99  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_5                100  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_6                101  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_7                102  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_8                103  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_9                104  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_10               105  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_11               106  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_12               107  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_13               108  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_14               109  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_15               110  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_16               111  // custom modes need to go at the end
 
 
 
@@ -261,6 +305,11 @@ const char name_9[] PROGMEM = "Single Dynamic";
 const char name_10[] PROGMEM = "Multi Dynamic";
 const char name_11[] PROGMEM = "Rainbow";
 const char name_12[] PROGMEM = "Rainbow Cycle";
+const char name_12[] PROGMEM = "Cool Cycle";
+const char name_12[] PROGMEM = "Warm Cycle";
+const char name_12[] PROGMEM = "Nature Cycle";
+const char name_12[] PROGMEM = "Candy Cycle";
+const char name_12[] PROGMEM = "Christmas Cycle";
 const char name_13[] PROGMEM = "Scan";
 const char name_14[] PROGMEM = "Dual Scan";
 const char name_15[] PROGMEM = "Fade";
@@ -276,6 +325,11 @@ const char name_24[] PROGMEM = "Flash Sparkle";
 const char name_25[] PROGMEM = "Hyper Sparkle";
 const char name_26[] PROGMEM = "Strobe";
 const char name_27[] PROGMEM = "Strobe Rainbow";
+const char name_27[] PROGMEM = "Strobe Cool";
+const char name_27[] PROGMEM = "Strobe Warm";
+const char name_27[] PROGMEM = "Strobe Nature";
+const char name_27[] PROGMEM = "Strobe Candy";
+const char name_27[] PROGMEM = "Strobe Christmas";
 const char name_28[] PROGMEM = "Multi Strobe";
 const char name_29[] PROGMEM = "Blink Rainbow";
 const char name_30[] PROGMEM = "Chase White";
@@ -303,6 +357,7 @@ const char name_51[] PROGMEM = "Circus Combustus";
 const char name_52[] PROGMEM = "Halloween";
 const char name_53[] PROGMEM = "Bicolor Chase";
 const char name_54[] PROGMEM = "Tricolor Chase";
+const char name_54[] PROGMEM = "Candy Cane";
 const char name_55[] PROGMEM = "ICU";
 const char name_56[] PROGMEM = "Custom 0"; // custom modes need to go at the end
 const char name_57[] PROGMEM = "Custom 1";
