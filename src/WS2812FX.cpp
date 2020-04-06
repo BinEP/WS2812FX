@@ -560,6 +560,7 @@ uint32_t* WS2812FX::intensitySums() {
   return intensities;
 }
 
+// TODO: Any rainbow, warm, cool, nature, candy, christmas stuff
 /*
  * No blinking. Just plain old static light.
  */
@@ -1176,6 +1177,19 @@ uint16_t WS2812FX::mode_sparkle(void) {
   return (SEGMENT.speed / SEGMENT_LENGTH);
 }
 
+//TODO
+
+uint16_t WS2812FX::mode_snow_sparkle(void) {
+  uint8_t size = 1 << SIZE_OPTION;
+  for(uint8_t i=0; i<size; i++) {
+    setPixelColor(SEGMENT.start + SEGMENT_RUNTIME.aux_param3 + i, SEGMENT.colors[1]);
+  }
+  SEGMENT_RUNTIME.aux_param3 = random16(SEGMENT_LENGTH - size); // aux_param3 stores the random led index
+  for(uint8_t i=0; i<size; i++) {
+    setPixelColor(SEGMENT.start + SEGMENT_RUNTIME.aux_param3 + i, SEGMENT.colors[0]);
+  }
+  return (SEGMENT.speed / SEGMENT_LENGTH);
+}
 
 /*
  * Lights all LEDs in the color. Flashes white pixels randomly.
@@ -1715,12 +1729,15 @@ uint16_t WS2812FX::mode_tricolor_chase(void) {
   return tricolor_chase(SEGMENT.colors[0], SEGMENT.colors[1], SEGMENT.colors[2]);
 }
 
+
 /*
  * Alternating white/red/black pixels running.
  */
 uint16_t WS2812FX::mode_circus_combustus(void) {
   return tricolor_chase(RED, WHITE, BLACK);
 }
+
+// TODO
 
 uint16_t WS2812FX::mode_candy_cane(void) {
   return tricolor_chase(RED, WHITE, BLACK);

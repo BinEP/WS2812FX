@@ -587,26 +587,58 @@ class WS2812FX {
 			_mode[FX_MODE_MULTI_DYNAMIC]           = &WS2812FX::mode_multi_dynamic;
 			_mode[FX_MODE_RAINBOW]                 = &WS2812FX::mode_rainbow;
 			_mode[FX_MODE_RAINBOW_CYCLE]           = &WS2812FX::mode_rainbow_cycle;
+			_mode[FX_MODE_COOL_CYCLE]              = &WS2812FX::mode_cool_cycle;
+			_mode[FX_MODE_WARM_CYCLE]              = &WS2812FX::mode_warm_cycle;
+			_mode[FX_MODE_NATURE_CYCLE]            = &WS2812FX::mode_nature_cycle;
+			_mode[FX_MODE_CANDY_CYCLE]             = &WS2812FX::mode_candy_cycle;
+			_mode[FX_MODE_CHRISTMAS_CYCLE]         = &WS2812FX::mode_christmas_cycle;
 			_mode[FX_MODE_SCAN]                    = &WS2812FX::mode_scan;
 			_mode[FX_MODE_DUAL_SCAN]               = &WS2812FX::mode_dual_scan;
 			_mode[FX_MODE_FADE]                    = &WS2812FX::mode_fade;
 			_mode[FX_MODE_THEATER_CHASE]           = &WS2812FX::mode_theater_chase;
 			_mode[FX_MODE_THEATER_CHASE_RAINBOW]   = &WS2812FX::mode_theater_chase_rainbow;
+			_mode[FX_MODE_THEATER_CHASE_COOL]      = &WS2812FX::mode_theater_chase_cool;
+			_mode[FX_MODE_THEATER_CHASE_WARM]      = &WS2812FX::mode_theater_chase_warm;
+			_mode[FX_MODE_THEATER_CHASE_NATURE]    = &WS2812FX::mode_theater_chase_nature;
+			_mode[FX_MODE_THEATER_CHASE_CANDY]     = &WS2812FX::mode_theater_chase_candy;
+			_mode[FX_MODE_THEATER_CHASE_CHRISTMAS] = &WS2812FX::mode_theater_chase_christmas
 			_mode[FX_MODE_TWINKLE]                 = &WS2812FX::mode_twinkle;
+			_mode[FX_MODE_TWINKLE_RAINBOW]         = &WS2812FX::mode_twinkle_rainbow;
+			_mode[FX_MODE_TWINKLE_COOL]            = &WS2812FX::mode_twinkle_cool;
+			_mode[FX_MODE_TWINKLE_WARM]            = &WS2812FX::mode_twinkle_warm;
+			_mode[FX_MODE_TWINKLE_NATURE]          = &WS2812FX::mode_twinkle_nature;
+			_mode[FX_MODE_TWINKLE_CANDY]           = &WS2812FX::mode_twinkle_candy;
+			_mode[FX_MODE_TWINKLE_CHRISTMAS]       = &WS2812FX::mode_twinkle_christmas;
 			_mode[FX_MODE_TWINKLE_RANDOM]          = &WS2812FX::mode_twinkle_random;
 			_mode[FX_MODE_TWINKLE_FADE]            = &WS2812FX::mode_twinkle_fade;
 			_mode[FX_MODE_TWINKLE_FADE_RANDOM]     = &WS2812FX::mode_twinkle_fade_random;
 			_mode[FX_MODE_SPARKLE]                 = &WS2812FX::mode_sparkle;
+			_mode[FX_MODE_SNOW_SPARKLE]            = &WS2812FX::mode_snow_sparkle;
 			_mode[FX_MODE_FLASH_SPARKLE]           = &WS2812FX::mode_flash_sparkle;
 			_mode[FX_MODE_HYPER_SPARKLE]           = &WS2812FX::mode_hyper_sparkle;
 			_mode[FX_MODE_STROBE]                  = &WS2812FX::mode_strobe;
 			_mode[FX_MODE_STROBE_RAINBOW]          = &WS2812FX::mode_strobe_rainbow;
+			_mode[FX_MODE_STROBE_COOL]             = &WS2812FX::mode_strobe_cool;
+			_mode[FX_MODE_STROBE_WARM]             = &WS2812FX::mode_strobe_warm;
+			_mode[FX_MODE_STROBE_NATURE]           = &WS2812FX::mode_strobe_nature;
+			_mode[FX_MODE_STROBE_CANDY]            = &WS2812FX::mode_strobe_candy;
+			_mode[FX_MODE_STROBE_CHRISTMAS]        = &WS2812FX::mode_strobe_christmas;
 			_mode[FX_MODE_MULTI_STROBE]            = &WS2812FX::mode_multi_strobe;
 			_mode[FX_MODE_BLINK_RAINBOW]           = &WS2812FX::mode_blink_rainbow;
+			_mode[FX_MODE_BLINK_COOL]              = &WS2812FX::mode_blink_cool;
+			_mode[FX_MODE_BLINK_WARM]              = &WS2812FX::mode_blink_warm;
+			_mode[FX_MODE_BLINK_NATURE]            = &WS2812FX::mode_blink_nature;
+			_mode[FX_MODE_BLINK_CANDY]             = &WS2812FX::mode_blink_candy;
+			_mode[FX_MODE_BLINK_CHRISTMAS]         = &WS2812FX::mode_blink_christmas;
 			_mode[FX_MODE_CHASE_WHITE]             = &WS2812FX::mode_chase_white;
 			_mode[FX_MODE_CHASE_COLOR]             = &WS2812FX::mode_chase_color;
 			_mode[FX_MODE_CHASE_RANDOM]            = &WS2812FX::mode_chase_random;
 			_mode[FX_MODE_CHASE_RAINBOW]           = &WS2812FX::mode_chase_rainbow;
+			_mode[FX_MODE_CHASE_COOL]              = &WS2812FX::mode_chase_cool;
+			_mode[FX_MODE_CHASE_WARM]              = &WS2812FX::mode_chase_warm;
+			_mode[FX_MODE_CHASE_NATURE]            = &WS2812FX::mode_chase_nature;
+			_mode[FX_MODE_CHASE_CANDY]             = &WS2812FX::mode_chase_candy;
+			_mode[FX_MODE_CHASE_CHRISTMAS]         = &WS2812FX::mode_chase_christmas;
 			_mode[FX_MODE_CHASE_FLASH]             = &WS2812FX::mode_chase_flash;
 			_mode[FX_MODE_CHASE_FLASH_RANDOM]      = &WS2812FX::mode_chase_flash_random;
 			_mode[FX_MODE_CHASE_RAINBOW_WHITE]     = &WS2812FX::mode_chase_rainbow_white;
@@ -628,6 +660,23 @@ class WS2812FX {
 			_mode[FX_MODE_HALLOWEEN]               = &WS2812FX::mode_halloween;
 			_mode[FX_MODE_BICOLOR_CHASE]           = &WS2812FX::mode_bicolor_chase;
 			_mode[FX_MODE_TRICOLOR_CHASE]          = &WS2812FX::mode_tricolor_chase;
+			_mode[FX_MODE_CANDY_CANE]              = &WS2812FX::mode_candy_cane;
+			_mode[FX_MODE_KITT]                    = &WS2812FX::mode_kitt;
+			_mode[FX_MODE_BOUNCING_BALLS]          = &WS2812FX::mode_bouncing_balls;
+			_mode[FX_MODE_BOUNCING_COLORED_BALLS]  = &WS2812FX::mode_bouncing_colored_balls;
+			_mode[FX_MODE_BLOCK_DISSOLVE]          = &WS2812FX::mode_block_dissolve;
+			_mode[FX_MODE_DUAL_LARSON]             = &WS2812FX::mode_dual_larson;
+			_mode[FX_MODE_FILLERUP]          = &WS2812FX::mode_fillerup;
+			_mode[FX_MODE_HEARTBEAT]          = &WS2812FX::mode_heartbeat;
+			_mode[FX_MODE_MULTI_COMET]          = &WS2812FX::mode_multi_comet;
+			_mode[FX_MODE_OSCILLATE]          = &WS2812FX::mode_oscillate;
+			_mode[FX_MODE_POPCORN]          = &WS2812FX::mode_popcorn;
+			_mode[FX_MODE_RAIN]          = &WS2812FX::mode_rain;
+			_mode[FX_MODE_RAINBOW_FIREWORKS]          = &WS2812FX::mode_rainbow_fireworks;
+			_mode[FX_MODE_RAINBOW_LARSON]          = &WS2812FX::mode_rainbow_larson;
+			_mode[FX_MODE_RANDOM_CHASE]          = &WS2812FX::mode_random_chase;
+			_mode[FX_MODE_TRIFADE]          = &WS2812FX::mode_trifade;
+			_mode[FX_MODE_VU_METER]          = &WS2812FX::mode_vu_meter;
 // if flash memory is constrained (I'm looking at you Arduino Nano), replace modes
 // that use a lot of flash with mode_static (reduces flash footprint by about 2100 bytes)
 #ifdef REDUCED_MODES
@@ -643,6 +692,18 @@ class WS2812FX {
 			_mode[FX_MODE_CUSTOM_1]                = &WS2812FX::mode_custom_1;
 			_mode[FX_MODE_CUSTOM_2]                = &WS2812FX::mode_custom_2;
 			_mode[FX_MODE_CUSTOM_3]                = &WS2812FX::mode_custom_3;
+			_mode[FX_MODE_CUSTOM_4]                = &WS2812FX::mode_custom_4;
+			_mode[FX_MODE_CUSTOM_5]                = &WS2812FX::mode_custom_5;
+			_mode[FX_MODE_CUSTOM_6]                = &WS2812FX::mode_custom_6;
+			_mode[FX_MODE_CUSTOM_7]                = &WS2812FX::mode_custom_7;
+			_mode[FX_MODE_CUSTOM_8]                = &WS2812FX::mode_custom_8;
+			_mode[FX_MODE_CUSTOM_9]                = &WS2812FX::mode_custom_9;
+			_mode[FX_MODE_CUSTOM_10]                = &WS2812FX::mode_custom_10;
+			_mode[FX_MODE_CUSTOM_11]                = &WS2812FX::mode_custom_11;
+			_mode[FX_MODE_CUSTOM_12]                = &WS2812FX::mode_custom_12;
+			_mode[FX_MODE_CUSTOM_13]                = &WS2812FX::mode_custom_13;
+			_mode[FX_MODE_CUSTOM_14]                = &WS2812FX::mode_custom_14;
+			_mode[FX_MODE_CUSTOM_15]                = &WS2812FX::mode_custom_15;
 
 			numLEDs = numLeds;
 			ledArray = leds;
@@ -842,6 +903,7 @@ class WS2812FX {
 			mode_twinkle_fade(void),
 			mode_twinkle_fade_random(void),
 			mode_sparkle(void),
+			mode_snow_sparkle(void),
 			mode_flash_sparkle(void),
 			mode_hyper_sparkle(void),
 			mode_strobe(void),
