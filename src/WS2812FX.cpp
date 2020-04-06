@@ -600,12 +600,31 @@ uint16_t WS2812FX::mode_blink(void) {
 
 
 /*
- * Classic Blink effect. Cycling through the rainbow.
+ * Other Blink effects. Cycling through the rainbow.
  */
 uint16_t WS2812FX::mode_blink_rainbow(void) {
   return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], false);
 }
 
+uint16_t WS2812FX::mode_blink_cool(void) {
+  return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], false);
+}
+
+uint16_t WS2812FX::mode_blink_warm(void) {
+  return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], false);
+}
+
+uint16_t WS2812FX::mode_blink_nature(void) {
+  return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], false);
+}
+
+uint16_t WS2812FX::mode_blink_candy(void) {
+  return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], false);
+}
+
+uint16_t WS2812FX::mode_blink_christmas(void) {
+  return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], false);
+}
 
 /*
  * Classic Strobe effect.
@@ -619,6 +638,26 @@ uint16_t WS2812FX::mode_strobe(void) {
  * Classic Strobe effect. Cycling through the rainbow.
  */
 uint16_t WS2812FX::mode_strobe_rainbow(void) {
+  return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], true);
+}
+
+uint16_t WS2812FX::mode_strobe_cool(void) {
+  return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], true);
+}
+
+uint16_t WS2812FX::mode_strobe_warm(void) {
+  return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], true);
+}
+
+uint16_t WS2812FX::mode_strobe_nature(void) {
+  return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], true);
+}
+
+uint16_t WS2812FX::mode_strobe_candy(void) {
+  return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], true);
+}
+
+uint16_t WS2812FX::mode_strobe_christmas(void) {
   return blink(color_wheel(SEGMENT_RUNTIME.counter_mode_call & 0xFF), SEGMENT.colors[1], true);
 }
 
@@ -836,7 +875,7 @@ uint16_t WS2812FX::mode_dual_scan(void) {
 
 
 /*
- * Cycles all LEDs at once through a rainbow.
+ * Cycles all LEDs at once through a rainbow. Maybe add the variants for this
  */
 uint16_t WS2812FX::mode_rainbow(void) {
   uint32_t color = color_wheel(SEGMENT_RUNTIME.counter_mode_step);
@@ -855,6 +894,56 @@ uint16_t WS2812FX::mode_rainbow(void) {
 uint16_t WS2812FX::mode_rainbow_cycle(void) {
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
 	  uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
+    setPixelColor(SEGMENT.start + i, color);
+  }
+
+  SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
+  return (SEGMENT.speed / 256);
+}
+
+uint16_t WS2812FX::mode_cool_cycle(void) {
+  for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
+    uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
+    setPixelColor(SEGMENT.start + i, color);
+  }
+
+  SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
+  return (SEGMENT.speed / 256);
+}
+
+uint16_t WS2812FX::mode_warm_cycle(void) {
+  for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
+    uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
+    setPixelColor(SEGMENT.start + i, color);
+  }
+
+  SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
+  return (SEGMENT.speed / 256);
+}
+
+uint16_t WS2812FX::mode_nature_cycle(void) {
+  for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
+    uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
+    setPixelColor(SEGMENT.start + i, color);
+  }
+
+  SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
+  return (SEGMENT.speed / 256);
+}
+
+uint16_t WS2812FX::mode_candy_cycle(void) {
+  for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
+    uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
+    setPixelColor(SEGMENT.start + i, color);
+  }
+
+  SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
+  return (SEGMENT.speed / 256);
+}
+
+uint16_t WS2812FX::mode_christmas_cycle(void) {
+  for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
+    uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
     setPixelColor(SEGMENT.start + i, color);
   }
 
@@ -942,6 +1031,25 @@ uint16_t WS2812FX::mode_twinkle_random(void) {
   return twinkle(color_wheel(random8()), SEGMENT.colors[1]);
 }
 
+uint16_t WS2812FX::mode_twinkle_cool(void) {
+  return twinkle(color_wheel(random8()), SEGMENT.colors[1]);
+}
+
+uint16_t WS2812FX::mode_twinkle_warm(void) {
+  return twinkle(color_wheel(random8()), SEGMENT.colors[1]);
+}
+
+uint16_t WS2812FX::mode_twinkle_nature(void) {
+  return twinkle(color_wheel(random8()), SEGMENT.colors[1]);
+}
+
+uint16_t WS2812FX::mode_twinkle_candy(void) {
+  return twinkle(color_wheel(random8()), SEGMENT.colors[1]);
+}
+
+uint16_t WS2812FX::mode_twinkle_christmas(void) {
+  return twinkle(color_wheel(random8()), SEGMENT.colors[1]);
+}
 
 /*
  * fade out functions
@@ -1202,6 +1310,41 @@ uint16_t WS2812FX::mode_chase_white(void) {
  * White running followed by random color.
  */
 uint16_t WS2812FX::mode_chase_random(void) {
+  if(SEGMENT_RUNTIME.counter_mode_step == 0) {
+    SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
+  }
+  return chase(color_wheel(SEGMENT_RUNTIME.aux_param), WHITE, WHITE);
+}
+
+uint16_t WS2812FX::mode_chase_cool(void) {
+  if(SEGMENT_RUNTIME.counter_mode_step == 0) {
+    SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
+  }
+  return chase(color_wheel(SEGMENT_RUNTIME.aux_param), WHITE, WHITE);
+}
+
+uint16_t WS2812FX::mode_chase_warm(void) {
+  if(SEGMENT_RUNTIME.counter_mode_step == 0) {
+    SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
+  }
+  return chase(color_wheel(SEGMENT_RUNTIME.aux_param), WHITE, WHITE);
+}
+
+uint16_t WS2812FX::mode_chase_nature(void) {
+  if(SEGMENT_RUNTIME.counter_mode_step == 0) {
+    SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
+  }
+  return chase(color_wheel(SEGMENT_RUNTIME.aux_param), WHITE, WHITE);
+}
+
+uint16_t WS2812FX::mode_chase_candy(void) {
+  if(SEGMENT_RUNTIME.counter_mode_step == 0) {
+    SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
+  }
+  return chase(color_wheel(SEGMENT_RUNTIME.aux_param), WHITE, WHITE);
+}
+
+uint16_t WS2812FX::mode_chase_christmas(void) {
   if(SEGMENT_RUNTIME.counter_mode_step == 0) {
     SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
   }
@@ -1572,11 +1715,26 @@ uint16_t WS2812FX::mode_tricolor_chase(void) {
   return tricolor_chase(SEGMENT.colors[0], SEGMENT.colors[1], SEGMENT.colors[2]);
 }
 
-
 /*
  * Alternating white/red/black pixels running.
  */
 uint16_t WS2812FX::mode_circus_combustus(void) {
+  return tricolor_chase(RED, WHITE, BLACK);
+}
+
+uint16_t WS2812FX::mode_candy_cane(void) {
+  return tricolor_chase(RED, WHITE, BLACK);
+}
+
+uint16_t WS2812FX::mode_kitt(void) {
+  return tricolor_chase(RED, WHITE, BLACK);
+}
+
+uint16_t WS2812FX::mode_bouncing_balls(void) {
+  return tricolor_chase(RED, WHITE, BLACK);
+}
+
+uint16_t WS2812FX::mode_bouncing_colored_balls(void) {
   return tricolor_chase(RED, WHITE, BLACK);
 }
 
@@ -1631,6 +1789,43 @@ uint16_t WS2812FX::mode_custom_2() {
 uint16_t WS2812FX::mode_custom_3() {
   return customModes[3]();
 }
+uint16_t WS2812FX::mode_custom_4() {
+  return customModes[4]();
+}
+uint16_t WS2812FX::mode_custom_5() {
+  return customModes[5]();
+}
+uint16_t WS2812FX::mode_custom_6() {
+  return customModes[6]();
+}
+uint16_t WS2812FX::mode_custom_7() {
+  return customModes[7]();
+}
+uint16_t WS2812FX::mode_custom_8() {
+  return customModes[8]();
+}
+uint16_t WS2812FX::mode_custom_9() {
+  return customModes[9]();
+}
+uint16_t WS2812FX::mode_custom_10() {
+  return customModes[10]();
+}
+uint16_t WS2812FX::mode_custom_11() {
+  return customModes[11]();
+}
+uint16_t WS2812FX::mode_custom_12() {
+  return customModes[12]();
+}
+uint16_t WS2812FX::mode_custom_13() {
+  return customModes[13]();
+}
+uint16_t WS2812FX::mode_custom_14() {
+  return customModes[14]();
+}
+uint16_t WS2812FX::mode_custom_15() {
+  return customModes[15]();
+}
+
 
 /*
  * Custom mode helpers

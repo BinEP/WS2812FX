@@ -811,6 +811,8 @@ class WS2812FX {
 			mode_random_color(void),
 			mode_single_dynamic(void),
 			mode_multi_dynamic(void),
+			// Maybe add all the variants here too, 
+			// fml though, so tired of this right now
 			mode_rainbow(void),
 			mode_rainbow_cycle(void),
 			mode_cool_cycle(void),
@@ -886,8 +888,6 @@ class WS2812FX {
 			mode_circus_combustus(void),
 			mode_bicolor_chase(void),
 			mode_tricolor_chase(void),
-
-
 			mode_candy_cane(void),
 			mode_kitt(void),
 			mode_bouncing_balls(void),
@@ -906,7 +906,6 @@ class WS2812FX {
 			mode_trifade(void),
 			mode_twinkle_fox(void),
 			mode_vu_meter(void),
-
 			mode_icu(void),
 			mode_custom_0(void),
 			mode_custom_1(void),
