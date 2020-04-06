@@ -666,17 +666,17 @@ class WS2812FX {
 			_mode[FX_MODE_BOUNCING_COLORED_BALLS]  = &WS2812FX::mode_bouncing_colored_balls;
 			_mode[FX_MODE_BLOCK_DISSOLVE]          = &WS2812FX::mode_block_dissolve;
 			_mode[FX_MODE_DUAL_LARSON]             = &WS2812FX::mode_dual_larson;
-			_mode[FX_MODE_FILLERUP]          = &WS2812FX::mode_fillerup;
-			_mode[FX_MODE_HEARTBEAT]          = &WS2812FX::mode_heartbeat;
-			_mode[FX_MODE_MULTI_COMET]          = &WS2812FX::mode_multi_comet;
-			_mode[FX_MODE_OSCILLATE]          = &WS2812FX::mode_oscillate;
-			_mode[FX_MODE_POPCORN]          = &WS2812FX::mode_popcorn;
-			_mode[FX_MODE_RAIN]          = &WS2812FX::mode_rain;
-			_mode[FX_MODE_RAINBOW_FIREWORKS]          = &WS2812FX::mode_rainbow_fireworks;
+			_mode[FX_MODE_FILLERUP]                = &WS2812FX::mode_fillerup;
+			_mode[FX_MODE_HEARTBEAT]               = &WS2812FX::mode_heartbeat;
+			_mode[FX_MODE_MULTI_COMET]             = &WS2812FX::mode_multi_comet;
+			_mode[FX_MODE_OSCILLATE]               = &WS2812FX::mode_oscillate;
+			_mode[FX_MODE_POPCORN]                 = &WS2812FX::mode_popcorn;
+			_mode[FX_MODE_RAIN]                    = &WS2812FX::mode_rain;
+			_mode[FX_MODE_RAINBOW_FIREWORKS]       = &WS2812FX::mode_rainbow_fireworks;
 			_mode[FX_MODE_RAINBOW_LARSON]          = &WS2812FX::mode_rainbow_larson;
-			_mode[FX_MODE_RANDOM_CHASE]          = &WS2812FX::mode_random_chase;
-			_mode[FX_MODE_TRIFADE]          = &WS2812FX::mode_trifade;
-			_mode[FX_MODE_VU_METER]          = &WS2812FX::mode_vu_meter;
+			_mode[FX_MODE_RANDOM_CHASE]            = &WS2812FX::mode_random_chase;
+			_mode[FX_MODE_TRIFADE]                 = &WS2812FX::mode_trifade;
+			_mode[FX_MODE_VU_METER]                = &WS2812FX::mode_vu_meter;
 // if flash memory is constrained (I'm looking at you Arduino Nano), replace modes
 // that use a lot of flash with mode_static (reduces flash footprint by about 2100 bytes)
 #ifdef REDUCED_MODES
@@ -698,12 +698,12 @@ class WS2812FX {
 			_mode[FX_MODE_CUSTOM_7]                = &WS2812FX::mode_custom_7;
 			_mode[FX_MODE_CUSTOM_8]                = &WS2812FX::mode_custom_8;
 			_mode[FX_MODE_CUSTOM_9]                = &WS2812FX::mode_custom_9;
-			_mode[FX_MODE_CUSTOM_10]                = &WS2812FX::mode_custom_10;
-			_mode[FX_MODE_CUSTOM_11]                = &WS2812FX::mode_custom_11;
-			_mode[FX_MODE_CUSTOM_12]                = &WS2812FX::mode_custom_12;
-			_mode[FX_MODE_CUSTOM_13]                = &WS2812FX::mode_custom_13;
-			_mode[FX_MODE_CUSTOM_14]                = &WS2812FX::mode_custom_14;
-			_mode[FX_MODE_CUSTOM_15]                = &WS2812FX::mode_custom_15;
+			_mode[FX_MODE_CUSTOM_10]               = &WS2812FX::mode_custom_10;
+			_mode[FX_MODE_CUSTOM_11]               = &WS2812FX::mode_custom_11;
+			_mode[FX_MODE_CUSTOM_12]               = &WS2812FX::mode_custom_12;
+			_mode[FX_MODE_CUSTOM_13]               = &WS2812FX::mode_custom_13;
+			_mode[FX_MODE_CUSTOM_14]               = &WS2812FX::mode_custom_14;
+			_mode[FX_MODE_CUSTOM_15]               = &WS2812FX::mode_custom_15;
 
 			numLEDs = numLeds;
 			ledArray = leds;
