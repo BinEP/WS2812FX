@@ -172,94 +172,104 @@
 #define FX_MODE_FADE                    20
 #define FX_MODE_THEATER_CHASE           21
 #define FX_MODE_THEATER_CHASE_RAINBOW   22
-#define FX_MODE_RUNNING_LIGHTS          23
-#define FX_MODE_TWINKLE                 24
-#define FX_MODE_TWINKLE_RAINBOW         25
-#define FX_MODE_TWINKLE_COOL            26
-#define FX_MODE_TWINKLE_WARM            27
-#define FX_MODE_TWINKLE_NATURE          28
-#define FX_MODE_TWINKLE_CANDY           29
-#define FX_MODE_TWINKLE_CHRISTMAS       30
-#define FX_MODE_TWINKLE_RANDOM          31
-#define FX_MODE_TWINKLE_FADE            32
-#define FX_MODE_TWINKLE_FADE_RANDOM     33
-#define FX_MODE_SPARKLE                 34
-#define FX_MODE_SNOW_SPARKLE            35
-#define FX_MODE_FLASH_SPARKLE           36
-#define FX_MODE_HYPER_SPARKLE           37
-#define FX_MODE_STROBE                  38
-#define FX_MODE_STROBE_RAINBOW          39
-#define FX_MODE_STROBE_COOL             40
-#define FX_MODE_STROBE_WARM             41
-#define FX_MODE_STROBE_NATURE           42
-#define FX_MODE_STROBE_CANDY            43
-#define FX_MODE_STROBE_CHRISTMAS        44
-#define FX_MODE_MULTI_STROBE            45
-#define FX_MODE_BLINK_RAINBOW           46
-#define FX_MODE_CHASE_WHITE             47
-#define FX_MODE_CHASE_COLOR             48
-#define FX_MODE_CHASE_RANDOM            49
-#define FX_MODE_CHASE_COOL              50
-#define FX_MODE_CHASE_WARM              51
-#define FX_MODE_CHASE_NATURE            52
-#define FX_MODE_CHASE_CANDY             53
-#define FX_MODE_CHASE_CHRISTMAS         54
-#define FX_MODE_CHASE_FLASH             55
-#define FX_MODE_CHASE_FLASH_RANDOM      56
-#define FX_MODE_CHASE_RAINBOW_WHITE     57
-#define FX_MODE_CHASE_BLACKOUT          58
-#define FX_MODE_CHASE_BLACKOUT_RAINBOW  59
-#define FX_MODE_COLOR_SWEEP_RANDOM      60
-#define FX_MODE_RUNNING_COLOR           61
-#define FX_MODE_RUNNING_RED_BLUE        62
-#define FX_MODE_RUNNING_RANDOM          63
-#define FX_MODE_LARSON_SCANNER          64
-#define FX_MODE_COMET                   65
-#define FX_MODE_FIREWORKS               66
-#define FX_MODE_FIREWORKS_RANDOM        67
-#define FX_MODE_MERRY_CHRISTMAS         68
-#define FX_MODE_FIRE_FLICKER            69
-#define FX_MODE_FIRE_FLICKER_SOFT       70
-#define FX_MODE_FIRE_FLICKER_INTENSE    71
-#define FX_MODE_CIRCUS_COMBUSTUS        72
-#define FX_MODE_HALLOWEEN               73
-#define FX_MODE_BICOLOR_CHASE           74
-#define FX_MODE_TRICOLOR_CHASE          75
-#define FX_MODE_CANDY_CANE              76
-#define FX_MODE_KITT                    77
-#define FX_MODE_BOUNCING_BALLS          78
-#define FX_MODE_BOUNCING_COLORED_BALLS  79
-#define FX_MODE_BLOCK_DISSOLVE          80
-#define FX_MODE_DUAL_LARSON             81
-#define FX_MODE_FILLERUP                82
-#define FX_MODE_HEARTBEAT               83
-#define FX_MODE_MULTI_COMET             84
-#define FX_MODE_OSCILLATE               85
-#define FX_MODE_POPCORN                 86
-#define FX_MODE_RAIN                    87
-#define FX_MODE_RAINBOW_FIREWORKS       88
-#define FX_MODE_RAINBOW_LARSON          89
-#define FX_MODE_RANDOM_CHASE            90
-#define FX_MODE_TRIFADE                 91
-#define FX_MODE_TWINKLE_FOX             92
-#define FX_MODE_VU_METER                93
-#define FX_MODE_CUSTOM                  94
-#define FX_MODE_CUSTOM_0                95  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_1                96  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_2                97  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_3                98  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_4                99  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_5                100  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_6                101  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_7                102  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_8                103  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_9                104  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_10               105  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_11               106  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_12               107  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_13               108  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_14               109  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_15               110  // custom modes need to go at the end
+#define FX_MODE_THEATER_CHASE_COOL      23
+#define FX_MODE_THEATER_CHASE_WARM      24
+#define FX_MODE_THEATER_CHASE_NATURE    25
+#define FX_MODE_THEATER_CHASE_CANDY     26
+#define FX_MODE_THEATER_CHASE_CHRISTMAS 27
+#define FX_MODE_RUNNING_LIGHTS          28
+#define FX_MODE_TWINKLE                 29
+#define FX_MODE_TWINKLE_RAINBOW         30
+#define FX_MODE_TWINKLE_COOL            31
+#define FX_MODE_TWINKLE_WARM            32
+#define FX_MODE_TWINKLE_NATURE          33
+#define FX_MODE_TWINKLE_CANDY           34
+#define FX_MODE_TWINKLE_CHRISTMAS       35
+#define FX_MODE_TWINKLE_RANDOM          36
+#define FX_MODE_TWINKLE_FADE            37
+#define FX_MODE_TWINKLE_FADE_RANDOM     38
+#define FX_MODE_SPARKLE                 39
+#define FX_MODE_SNOW_SPARKLE            40
+#define FX_MODE_FLASH_SPARKLE           41
+#define FX_MODE_HYPER_SPARKLE           42
+#define FX_MODE_STROBE                  43
+#define FX_MODE_STROBE_RAINBOW          44
+#define FX_MODE_STROBE_COOL             45
+#define FX_MODE_STROBE_WARM             46
+#define FX_MODE_STROBE_NATURE           47
+#define FX_MODE_STROBE_CANDY            48
+#define FX_MODE_STROBE_CHRISTMAS        49
+#define FX_MODE_MULTI_STROBE            50
+#define FX_MODE_BLINK_RAINBOW           51
+#define FX_MODE_BLINK_COOL              52
+#define FX_MODE_BLINK_WARM              53
+#define FX_MODE_BLINK_NATURE            54
+#define FX_MODE_BLINK_CANDY             55
+#define FX_MODE_BLINK_CHRISTMAS         56
+#define FX_MODE_CHASE_RANDOM            57
+#define FX_MODE_CHASE_COOL              58
+#define FX_MODE_CHASE_WARM              59
+#define FX_MODE_CHASE_NATURE            60
+#define FX_MODE_CHASE_CANDY             61
+#define FX_MODE_CHASE_CHRISTMAS         62
+#define FX_MODE_CHASE_WHITE             63
+#define FX_MODE_CHASE_COLOR             64
+#define FX_MODE_CHASE_FLASH             65
+#define FX_MODE_CHASE_FLASH_RANDOM      66
+#define FX_MODE_CHASE_RAINBOW_WHITE     67
+#define FX_MODE_CHASE_BLACKOUT          68
+#define FX_MODE_CHASE_BLACKOUT_RAINBOW  69
+#define FX_MODE_COLOR_SWEEP_RANDOM      70
+#define FX_MODE_RUNNING_COLOR           71
+#define FX_MODE_RUNNING_RED_BLUE        72
+#define FX_MODE_RUNNING_RANDOM          73
+#define FX_MODE_LARSON_SCANNER          74
+#define FX_MODE_COMET                   75
+#define FX_MODE_FIREWORKS               76
+#define FX_MODE_FIREWORKS_RANDOM        77
+#define FX_MODE_MERRY_CHRISTMAS         78
+#define FX_MODE_FIRE_FLICKER            79
+#define FX_MODE_FIRE_FLICKER_SOFT       80
+#define FX_MODE_FIRE_FLICKER_INTENSE    81
+#define FX_MODE_CIRCUS_COMBUSTUS        82
+#define FX_MODE_HALLOWEEN               83
+#define FX_MODE_BICOLOR_CHASE           84
+#define FX_MODE_TRICOLOR_CHASE          85
+#define FX_MODE_CANDY_CANE              86
+#define FX_MODE_KITT                    87
+#define FX_MODE_BOUNCING_BALLS          88
+#define FX_MODE_BOUNCING_COLORED_BALLS  89
+#define FX_MODE_BLOCK_DISSOLVE          90
+#define FX_MODE_DUAL_LARSON             91
+#define FX_MODE_FILLERUP                92
+#define FX_MODE_HEARTBEAT               93
+#define FX_MODE_MULTI_COMET             94
+#define FX_MODE_OSCILLATE               95
+#define FX_MODE_POPCORN                 96
+#define FX_MODE_RAIN                    97
+#define FX_MODE_RAINBOW_FIREWORKS       98
+#define FX_MODE_RAINBOW_LARSON          99
+#define FX_MODE_RANDOM_CHASE            100
+#define FX_MODE_TRIFADE                 101
+#define FX_MODE_TWINKLE_FOX             102
+#define FX_MODE_VU_METER                103
+#define FX_MODE_CUSTOM                  104
+#define FX_MODE_CUSTOM_0                105  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_1                106  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_2                107  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_3                108  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_4                109  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_5                110  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_6                111  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_7                112  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_8                113  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_9                114  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_10               115  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_11               116  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_12               117  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_13               118  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_14               119  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_15               120  // custom modes need to go at the end
 
 
 
@@ -304,64 +314,114 @@ const char name_9[] PROGMEM = "Single Dynamic";
 const char name_10[] PROGMEM = "Multi Dynamic";
 const char name_11[] PROGMEM = "Rainbow";
 const char name_12[] PROGMEM = "Rainbow Cycle";
-const char name_12[] PROGMEM = "Cool Cycle";
-const char name_12[] PROGMEM = "Warm Cycle";
-const char name_12[] PROGMEM = "Nature Cycle";
-const char name_12[] PROGMEM = "Candy Cycle";
-const char name_12[] PROGMEM = "Christmas Cycle";
-const char name_13[] PROGMEM = "Scan";
-const char name_14[] PROGMEM = "Dual Scan";
-const char name_15[] PROGMEM = "Fade";
-const char name_16[] PROGMEM = "Theater Chase";
-const char name_17[] PROGMEM = "Theater Chase Rainbow";
-const char name_18[] PROGMEM = "Running Lights";
-const char name_19[] PROGMEM = "Twinkle";
-const char name_20[] PROGMEM = "Twinkle Random";
-const char name_21[] PROGMEM = "Twinkle Fade";
-const char name_22[] PROGMEM = "Twinkle Fade Random";
-const char name_23[] PROGMEM = "Sparkle";
-const char name_24[] PROGMEM = "Flash Sparkle";
-const char name_25[] PROGMEM = "Hyper Sparkle";
-const char name_26[] PROGMEM = "Strobe";
-const char name_27[] PROGMEM = "Strobe Rainbow";
-const char name_27[] PROGMEM = "Strobe Cool";
-const char name_27[] PROGMEM = "Strobe Warm";
-const char name_27[] PROGMEM = "Strobe Nature";
-const char name_27[] PROGMEM = "Strobe Candy";
-const char name_27[] PROGMEM = "Strobe Christmas";
-const char name_28[] PROGMEM = "Multi Strobe";
-const char name_29[] PROGMEM = "Blink Rainbow";
-const char name_30[] PROGMEM = "Chase White";
-const char name_31[] PROGMEM = "Chase Color";
-const char name_32[] PROGMEM = "Chase Random";
-const char name_33[] PROGMEM = "Chase Rainbow";
-const char name_34[] PROGMEM = "Chase Flash";
-const char name_35[] PROGMEM = "Chase Flash Random";
-const char name_36[] PROGMEM = "Chase Rainbow White";
-const char name_37[] PROGMEM = "Chase Blackout";
-const char name_38[] PROGMEM = "Chase Blackout Rainbow";
-const char name_39[] PROGMEM = "Color Sweep Random";
-const char name_40[] PROGMEM = "Running Color";
-const char name_41[] PROGMEM = "Running Red Blue";
-const char name_42[] PROGMEM = "Running Random";
-const char name_43[] PROGMEM = "Larson Scanner";
-const char name_44[] PROGMEM = "Comet";
-const char name_45[] PROGMEM = "Fireworks";
-const char name_46[] PROGMEM = "Fireworks Random";
-const char name_47[] PROGMEM = "Merry Christmas";
-const char name_48[] PROGMEM = "Fire Flicker";
-const char name_49[] PROGMEM = "Fire Flicker (soft)";
-const char name_50[] PROGMEM = "Fire Flicker (intense)";
-const char name_51[] PROGMEM = "Circus Combustus";
-const char name_52[] PROGMEM = "Halloween";
-const char name_53[] PROGMEM = "Bicolor Chase";
-const char name_54[] PROGMEM = "Tricolor Chase";
-const char name_54[] PROGMEM = "Candy Cane";
-const char name_55[] PROGMEM = "ICU";
-const char name_56[] PROGMEM = "Custom 0"; // custom modes need to go at the end
-const char name_57[] PROGMEM = "Custom 1";
-const char name_58[] PROGMEM = "Custom 2";
-const char name_59[] PROGMEM = "Custom 3";
+const char name_13[] PROGMEM = "Cool Cycle";
+const char name_14[] PROGMEM = "Warm Cycle";
+const char name_15[] PROGMEM = "Nature Cycle";
+const char name_16[] PROGMEM = "Candy Cycle";
+const char name_17[] PROGMEM = "Christmas Cycle";
+const char name_18[] PROGMEM = "Scan";
+const char name_19[] PROGMEM = "Dual Scan";
+const char name_20[] PROGMEM = "Fade";
+const char name_21[] PROGMEM = "Theater Chase";
+const char name_22[] PROGMEM = "Theater Chase Rainbow";
+const char name_23[] PROGMEM = "Theater Chase Cool";
+const char name_24[] PROGMEM = "Theater Chase Warm";
+const char name_25[] PROGMEM = "Theater Chase Nature";
+const char name_26[] PROGMEM = "Theater Chase Candy";
+const char name_27[] PROGMEM = "Theater Chase Christmas";
+const char name_28[] PROGMEM = "Running Lights";
+const char name_29[] PROGMEM = "Twinkle";
+const char name_30[] PROGMEM = "Twinkle Rainbow";
+const char name_31[] PROGMEM = "Twinkle Cool";
+const char name_32[] PROGMEM = "Twinkle Warm";
+const char name_33[] PROGMEM = "Twinkle Nature";
+const char name_34[] PROGMEM = "Twinkle Candy";
+const char name_35[] PROGMEM = "Twinkle Christmas";
+const char name_36[] PROGMEM = "Twinkle Random";
+const char name_37[] PROGMEM = "Twinkle Fade";
+const char name_38[] PROGMEM = "Twinkle Fade Random";
+const char name_39[] PROGMEM = "Sparkle";
+const char name_40[] PROGMEM = "Flash Sparkle";
+const char name_41[] PROGMEM = "Hyper Sparkle";
+const char name_42[] PROGMEM = "Strobe";
+const char name_43[] PROGMEM = "Strobe Rainbow";
+const char name_44[] PROGMEM = "Strobe Cool";
+const char name_45[] PROGMEM = "Strobe Warm";
+const char name_46[] PROGMEM = "Strobe Nature";
+const char name_47[] PROGMEM = "Strobe Candy";
+const char name_48[] PROGMEM = "Strobe Christmas";
+const char name_49[] PROGMEM = "Multi Strobe";
+const char name_50[] PROGMEM = "Blink Rainbow";
+const char name_51[] PROGMEM = "Blink Cool";
+const char name_52[] PROGMEM = "Blink Warm";
+const char name_53[] PROGMEM = "Blink Nature";
+const char name_54[] PROGMEM = "Blink Candy";
+const char name_55[] PROGMEM = "Blink Christmas";
+const char name_56[] PROGMEM = "Chase Random";
+const char name_57[] PROGMEM = "Chase Cool";
+const char name_58[] PROGMEM = "Chase Warm";
+const char name_59[] PROGMEM = "Chase Nature";
+const char name_60[] PROGMEM = "Chase Candy";
+const char name_61[] PROGMEM = "Chase Christmas";
+const char name_62[] PROGMEM = "Chase White";
+const char name_63[] PROGMEM = "Chase Color";
+const char name_64[] PROGMEM = "Chase Flash";
+const char name_65[] PROGMEM = "Chase Flash Random";
+const char name_66[] PROGMEM = "Chase Rainbow White";
+const char name_67[] PROGMEM = "Chase Blackout";
+const char name_68[] PROGMEM = "Chase Blackout Rainbow";
+const char name_69[] PROGMEM = "Color Sweep Random";
+const char name_70[] PROGMEM = "Running Color";
+const char name_71[] PROGMEM = "Running Red Blue";
+const char name_72[] PROGMEM = "Running Random";
+const char name_73[] PROGMEM = "Larson Scanner";
+const char name_74[] PROGMEM = "Comet";
+const char name_75[] PROGMEM = "Fireworks";
+const char name_76[] PROGMEM = "Fireworks Random";
+const char name_77[] PROGMEM = "Merry Christmas";
+const char name_78[] PROGMEM = "Fire Flicker";
+const char name_79[] PROGMEM = "Fire Flicker (soft)";
+const char name_80[] PROGMEM = "Fire Flicker (intense)";
+const char name_81[] PROGMEM = "Circus Combustus";
+const char name_82[] PROGMEM = "Halloween";
+const char name_83[] PROGMEM = "Bicolor Chase";
+const char name_84[] PROGMEM = "Tricolor Chase";
+const char name_85[] PROGMEM = "Candy Cane";
+const char name_86[] PROGMEM = "Kitt";
+const char name_87[] PROGMEM = "Bouncing Balls";
+const char name_88[] PROGMEM = "Bouncing Colored Balls";
+const char name_89[] PROGMEM = "Block Dissolve";
+const char name_90[] PROGMEM = "Dual Larson";
+const char name_91[] PROGMEM = "Fillerup";
+const char name_92[] PROGMEM = "Heartbeat";
+const char name_93[] PROGMEM = "Multi-Comet";
+const char name_94[] PROGMEM = "Oscillate";
+const char name_95[] PROGMEM = "Popcorn";
+const char name_96[] PROGMEM = "Rain";
+const char name_97[] PROGMEM = "Rainbow Fireworks";
+const char name_98[] PROGMEM = "Rainbow Larson";
+const char name_99[] PROGMEM = "Random Chase";
+const char name_100[] PROGMEM = "Trifade";
+const char name_101[] PROGMEM = "Twinkle Fox";
+const char name_102[] PROGMEM = "VU Meter";
+const char name_103[] PROGMEM = "ICU";
+const char name_104[] PROGMEM = "Custom 0"; // custom modes need to go at the end
+const char name_105[] PROGMEM = "Custom 1";
+const char name_106[] PROGMEM = "Custom 2";
+const char name_107[] PROGMEM = "Custom 3";
+const char name_108[] PROGMEM = "Custom 4";
+const char name_109[] PROGMEM = "Custom 5";
+const char name_110[] PROGMEM = "Custom 6";
+const char name_111[] PROGMEM = "Custom 7";
+const char name_112[] PROGMEM = "Custom 8";
+const char name_113[] PROGMEM = "Custom 9";
+const char name_114[] PROGMEM = "Custom 10";
+const char name_115[] PROGMEM = "Custom 11";
+const char name_116[] PROGMEM = "Custom 12";
+const char name_117[] PROGMEM = "Custom 13";
+const char name_118[] PROGMEM = "Custom 14";
+const char name_119[] PROGMEM = "Custom 15";
+
 
 static const __FlashStringHelper* _names[] = {
 	FSH(name_0),
@@ -474,7 +534,17 @@ static const __FlashStringHelper* _names[] = {
 	FSH(name_107),
 	FSH(name_108),
 	FSH(name_109),
-	FSH(name_110)
+	FSH(name_110),
+	FSH(name_111),
+	FSH(name_112),
+	FSH(name_113),
+	FSH(name_114),
+	FSH(name_115),
+	FSH(name_116),
+	FSH(name_117),
+	FSH(name_118),
+	FSH(name_119),
+	FSH(name_120)
 };
 
 class WS2812FX {
