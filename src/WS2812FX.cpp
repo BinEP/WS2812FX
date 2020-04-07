@@ -53,7 +53,21 @@
 */
 
 #include "WS2812FX.h"
-
+// include the custom effects
+#include "custom/BlockDissolve.h"
+#include "custom/DualLarson.h"
+#include "custom/Fillerup.h"
+#include "custom/Heartbeat.h"
+#include "custom/MultiComet.h"
+#include "custom/Oscillate.h"
+#include "custom/Popcorn.h"
+#include "custom/Rain.h"
+#include "custom/RainbowFireworks.h"
+#include "custom/RainbowLarson.h"
+#include "custom/RandomChase.h"
+#include "custom/TriFade.h"
+#include "custom/TwinkleFox.h"
+#include "custom/VUMeter.h"
 
 
 
@@ -972,6 +986,36 @@ uint16_t WS2812FX::mode_theater_chase_rainbow(void) {
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
+uint16_t WS2812FX::mode_theater_chase_cool(void) {
+  SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
+  uint32_t color = color_wheel(SEGMENT_RUNTIME.counter_mode_step);
+  return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
+}
+
+uint16_t WS2812FX::mode_theater_chase_warm(void) {
+  SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
+  uint32_t color = color_wheel(SEGMENT_RUNTIME.counter_mode_step);
+  return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
+}
+
+uint16_t WS2812FX::mode_theater_chase_nature(void) {
+  SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
+  uint32_t color = color_wheel(SEGMENT_RUNTIME.counter_mode_step);
+  return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
+}
+
+uint16_t WS2812FX::mode_theater_chase_candy(void) {
+  SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
+  uint32_t color = color_wheel(SEGMENT_RUNTIME.counter_mode_step);
+  return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
+}
+
+uint16_t WS2812FX::mode_theater_chase_christmas(void) {
+  SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
+  uint32_t color = color_wheel(SEGMENT_RUNTIME.counter_mode_step);
+  return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
+}
+
 
 /*
  * Running lights effect with smooth sine transition.
@@ -1029,6 +1073,11 @@ uint16_t WS2812FX::mode_twinkle(void) {
  * Inspired by www.tweaking4all.com/hardware/arduino/arduino-led-strip-effects/
  */
 uint16_t WS2812FX::mode_twinkle_random(void) {
+  return twinkle(color_wheel(random8()), SEGMENT.colors[1]);
+}
+
+// TODO
+uint16_t WS2812FX::mode_twinkle_rainbow(void) {
   return twinkle(color_wheel(random8()), SEGMENT.colors[1]);
 }
 
@@ -1754,6 +1803,71 @@ uint16_t WS2812FX::mode_bouncing_balls(void) {
 uint16_t WS2812FX::mode_bouncing_colored_balls(void) {
   return tricolor_chase(RED, WHITE, BLACK);
 }
+
+
+
+uint16_t WS2812FX::mode_block_dissolve(void) {
+  return blockDissolve();
+}
+
+uint16_t WS2812FX::mode_dual_larson(void) {
+  return dualLarson();
+}
+
+uint16_t WS2812FX::mode_fillerup(void) {
+  return fillerup();
+}
+
+uint16_t WS2812FX::mode_heartbeat(void) {
+  return heartbeat();
+}
+
+uint16_t WS2812FX::mode_multi_comet(void) {
+  return multiComet();
+}
+
+uint16_t WS2812FX::mode_oscillate(void) {
+  return oscillate();
+}
+
+uint16_t WS2812FX::mode_popcorn(void) {
+  return popcorn();
+}
+
+uint16_t WS2812FX::mode_rain(void) {
+  return rain();
+}
+
+uint16_t WS2812FX::mode_rainbow_fireworks(void) {
+  return rainbowFireworks();
+}
+
+uint16_t WS2812FX::mode_rainbow_larson(void) {
+  return rainbowLarson();
+}
+
+uint16_t WS2812FX::mode_random_chase(void) {
+  return randomChase();
+}
+
+uint16_t WS2812FX::mode_trifade(void) {
+  return triFade();
+}
+
+uint16_t WS2812FX::mode_vu_meter(void) {
+  return vuMeter();
+}
+
+
+
+
+
+
+
+
+
+
+
 
 /*
  * ICU mode
