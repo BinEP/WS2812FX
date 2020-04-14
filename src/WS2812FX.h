@@ -257,6 +257,23 @@
 #define FX_MODE_CUSTOM_14               121  // custom modes need to go at the end
 #define FX_MODE_CUSTOM_15               122  // custom modes need to go at the end
 
+#define WARM_CYCLE_COLOR_MOD			150
+#define COOL_CYCLE_COLOR_MOD			60
+#define NATURE_CYCLE_COLOR_MOD			50
+#define NORMAL_CYCLE_COLOR_MOD			-1
+#define CHRISTMAS_CYCLE_COLOR_MOD		-1
+#define CANDY_CYCLE_COLOR_MOD			40
+
+
+enum RAINBOW_EFFECT {
+	WARM_CYCLE = 1, 
+	COOL_CYCLE, 
+	NATURE_CYCLE, 
+	NORMAL_CYCLE, 
+	CHRISTMAS_CYCLE, 
+	CANDY_CYCLE};
+
+
 
 
 /* Similar to above, but for an 8-bit gamma-correction table.
@@ -807,8 +824,9 @@ class WS2812FX {
 			getColor(void),
 			getPixelColor(uint16_t n),
 			getColor(uint8_t),
-			intensitySum(void),
-			fadeColorScheme(CRGB pixel);
+			intensitySum(void);
+		
+		CRGB fadeColorScheme(uint8_t modAlongWheel, int colorMode, int colorMod);
 
 
 		static uint8_t    gamma8(uint8_t x) {

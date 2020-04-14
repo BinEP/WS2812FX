@@ -575,56 +575,60 @@ uint32_t* WS2812FX::intensitySums() {
 }
 
 
-CRGB fadeColorScheme(int modAlongWheel, int colorMode, int colorMod) {
+CRGB WS2812FX::fadeColorScheme(uint8_t modAlongWheel, int colorMode, int colorMod) {
 
 
-  char* color = color_wheel(modAlongWheel);
+  uint32_t color = color_wheel(modAlongWheel);
+  // Only want the last byte
+  uint8_t c = color & 0xFF;
+  uint8_t c2 = (color >> 16) & 0xFF;
+  uint8_t c3 = (color >> 8) & 0xFF;
 
   // c = Wheel(((i * 256 / NUM_LEDS) + j) & 255);
   //  Serial.println(*c);
   //70 is optimal
   CRGB pixel;
 
-  switch (setOfColors) {
+  switch (colorMode) {
     // Warm Cycle
     case 1:
-      if (*c < colorMod) {
-        pixel.setRGB(255, colorMod - *c, 0);
+      if (c < colorMod) {
+        pixel.setRGB(255, colorMod - c, 0);
         // setPixel(i, 255, colorMod - *c, 0);
       } else {
-         pixel.setRGB(255, 0, *c - colorMod);
+         pixel.setRGB(255, 0, c - colorMod);
       }
       break;
       // Cool Cycle
     case 2:
-      if (*c < colorMod) {
-         pixel.setRGB((colorMod - *c) * 2, 0, 255);
+      if (c < colorMod) {
+         pixel.setRGB((colorMod - c) * 2, 0, 255);
       } else {
-         pixel.setRGB(0, (*c - colorMod), 255);
+         pixel.setRGB(0, (c - colorMod), 255);
       }
       break;
       // Nature Cycle
     case 3:
-      if (*c < colorMod) {
-         pixel.setRGB(0, 255, colorMod - *c);
+      if (c < colorMod) {
+         pixel.setRGB(0, 255, colorMod - c);
       } else {
-         pixel.setRGB(*c - colorMod, 255, 0);
+         pixel.setRGB(c - colorMod, 255, 0);
       }
 
       break;
       // Normal Rainbow
     case 4:
-      pixel.setRGB(*c, *(c + 1), *(c + 2));
+      pixel.setRGB(c, c2, c3);
 
       break;
       // Christmas
     case 5:
-      pixel.setRGB(255 - *c, *c, 5);
+      pixel.setRGB(255 - c, c, 5);
 
       break;
 // Candy
     case 6:
-      pixel.setRGB(255 - *c, *c, colorMod);
+      pixel.setRGB(255 - c, c, colorMod);
 
       break;
   }
@@ -969,7 +973,7 @@ uint16_t WS2812FX::mode_rainbow(void) {
  */
 uint16_t WS2812FX::mode_rainbow_cycle(void) {
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
-	  uint32_t color = color_wheel(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF);
+    uint32_t color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, NORMAL_CYCLE, NORMAL_CYCLE_COLOR_MOD);
     setPixelColor(SEGMENT.start + i, color);
   }
 
