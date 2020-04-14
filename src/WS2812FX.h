@@ -826,7 +826,7 @@ class WS2812FX {
 			getColor(uint8_t),
 			intensitySum(void);
 		
-		CRGB fadeColorScheme(uint8_t modAlongWheel, int colorMode, int colorMod);
+		CRGB fadeColorScheme(uint8_t modAlongWheel, int colorMode);
 
 
 		static uint8_t    gamma8(uint8_t x) {
