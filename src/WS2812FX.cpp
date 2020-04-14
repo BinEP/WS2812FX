@@ -110,6 +110,7 @@ void WS2812FX::service() {
 // overload setPixelColor() functions so we can use gamma correction
 // (see https://learn.adafruit.com/led-tricks-gamma-correction/the-issue)
 void WS2812FX::setPixelColor(uint16_t n, uint32_t c) {
+  if (n > numLEDs) return;
   if(IS_GAMMA) {
     uint8_t w = (c >> 24) & 0xFF;
     uint8_t g = (c >> 16) & 0xFF;
@@ -646,7 +647,6 @@ CRGB WS2812FX::fadeColorScheme(uint8_t modAlongWheel, int colorMode) {
 
 
 
-// TODO: Any rainbow, warm, cool, nature, candy, christmas stuff
 /*
  * No blinking. Just plain old static light.
  */
@@ -1148,7 +1148,6 @@ uint16_t WS2812FX::mode_twinkle_random(void) {
   return twinkle(fadeColorScheme(random8(), NORMAL_CYCLE), SEGMENT.colors[1]);
 }
 
-// TODO
 uint16_t WS2812FX::mode_twinkle_rainbow(void) {
   return twinkle(fadeColorScheme(random8(), NORMAL_CYCLE), SEGMENT.colors[1]);
 }
@@ -1298,16 +1297,26 @@ uint16_t WS2812FX::mode_sparkle(void) {
   return (SEGMENT.speed / SEGMENT_LENGTH);
 }
 
-//TODO
 
 uint16_t WS2812FX::mode_snow_sparkle(void) {
   uint8_t size = 1 << SIZE_OPTION;
-  for(uint8_t i=0; i<size; i++) {
-    setPixelColor(SEGMENT.start + SEGMENT_RUNTIME.aux_param3 + i, SEGMENT.colors[1]);
+  // TODO make this an option or something
+  SEGMENT_RUNTIME.aux_param1 = 6;
+
+  for (uint8_t j = 0; j < SEGMENT_RUNTIME.aux_param1; j++) {
+    SEGMENT_RUNTIME.aux_param3 = random16(SEGMENT_LENGTH - size); // aux_param3 stores the random led index
+
+    // setPixelColor(SEGMENT.start + random(SEGMENT_LENGTH) + i, SEGMENT.colors[1]);
+    for(uint8_t i=0; i<size; i++) {
+      setPixelColor(SEGMENT.start + SEGMENT_RUNTIME.aux_param3 + i, WHITE);
+    }
   }
-  SEGMENT_RUNTIME.aux_param3 = random16(SEGMENT_LENGTH - size); // aux_param3 stores the random led index
-  for(uint8_t i=0; i<size; i++) {
-    setPixelColor(SEGMENT.start + SEGMENT_RUNTIME.aux_param3 + i, SEGMENT.colors[0]);
+  
+  for (uint8_t j = 0; j < SEGMENT_RUNTIME.aux_param1; j++) {
+    SEGMENT_RUNTIME.aux_param3 = random16(SEGMENT_LENGTH - size); // aux_param3 stores the random led index
+    for(uint8_t i=0; i<size; i++) {
+      setPixelColor(SEGMENT.start + SEGMENT_RUNTIME.aux_param3 + i, SEGMENT.colors[0]);
+    }
   }
   return (SEGMENT.speed / SEGMENT_LENGTH);
 }
@@ -1858,15 +1867,17 @@ uint16_t WS2812FX::mode_circus_combustus(void) {
   return tricolor_chase(RED, WHITE, BLACK);
 }
 
-// TODO
 
 uint16_t WS2812FX::mode_candy_cane(void) {
-  return tricolor_chase(RED, WHITE, BLACK);
+  return running(RED, WHITE);
 }
 
 uint16_t WS2812FX::mode_kitt(void) {
-  return tricolor_chase(RED, WHITE, BLACK);
+  SEGMENT.colors[0] = RED
+  return mode_larson_scanner();
 }
+
+// TODO
 
 uint16_t WS2812FX::mode_bouncing_balls(void) {
   return tricolor_chase(RED, WHITE, BLACK);
