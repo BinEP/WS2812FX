@@ -807,7 +807,8 @@ class WS2812FX {
 			getColor(void),
 			getPixelColor(uint16_t n),
 			getColor(uint8_t),
-			intensitySum(void);
+			intensitySum(void),
+			fadeColorScheme(CRGB pixel);
 
 
 		static uint8_t    gamma8(uint8_t x) {
