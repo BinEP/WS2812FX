@@ -581,9 +581,9 @@ CRGB WS2812FX::fadeColorScheme(uint8_t modAlongWheel, int colorMode) {
 
   uint32_t color = color_wheel(modAlongWheel);
   // Only want the last byte
-  uint8_t c = color & 0xFF;
-  uint8_t c2 = (color >> 16) & 0xFF;
-  uint8_t c3 = (color >> 8) & 0xFF;
+  uint8_t c3 = color & 0xFF;               //b
+  uint8_t c2 = (color >> 16) & 0xFF;      //g
+  uint8_t c = (color >> 8) & 0xFF;       //r
 
   // c = Wheel(((i * 256 / NUM_LEDS) + j) & 255);
   //  Serial.println(*c);
