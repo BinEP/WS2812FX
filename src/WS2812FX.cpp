@@ -1873,7 +1873,7 @@ uint16_t WS2812FX::mode_candy_cane(void) {
 }
 
 uint16_t WS2812FX::mode_kitt(void) {
-  SEGMENT.colors[0] = RED
+  SEGMENT.colors[0] = RED;
   return mode_larson_scanner();
 }
 
