@@ -1301,9 +1301,9 @@ uint16_t WS2812FX::mode_sparkle(void) {
 uint16_t WS2812FX::mode_snow_sparkle(void) {
   uint8_t size = 1 << SIZE_OPTION;
   // TODO make this an option or something
-  SEGMENT_RUNTIME.aux_param1 = 6;
+  SEGMENT_RUNTIME.aux_param = 6;
 
-  for (uint8_t j = 0; j < SEGMENT_RUNTIME.aux_param1; j++) {
+  for (uint8_t j = 0; j < SEGMENT_RUNTIME.aux_param; j++) {
     SEGMENT_RUNTIME.aux_param3 = random16(SEGMENT_LENGTH - size); // aux_param3 stores the random led index
 
     // setPixelColor(SEGMENT.start + random(SEGMENT_LENGTH) + i, SEGMENT.colors[1]);
@@ -1312,7 +1312,7 @@ uint16_t WS2812FX::mode_snow_sparkle(void) {
     }
   }
   
-  for (uint8_t j = 0; j < SEGMENT_RUNTIME.aux_param1; j++) {
+  for (uint8_t j = 0; j < SEGMENT_RUNTIME.aux_param; j++) {
     SEGMENT_RUNTIME.aux_param3 = random16(SEGMENT_LENGTH - size); // aux_param3 stores the random led index
     for(uint8_t i=0; i<size; i++) {
       setPixelColor(SEGMENT.start + SEGMENT_RUNTIME.aux_param3 + i, SEGMENT.colors[0]);
