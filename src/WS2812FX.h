@@ -777,6 +777,7 @@ class WS2812FX {
 			setPixelColor(uint16_t n, uint32_t c),
 			setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b),
 			setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_t w),
+			setPixelColor(uint16_t n, CRGB pixel),
 			copyPixels(uint16_t d, uint16_t s, uint16_t c),
 			show(void);
 

@@ -149,6 +149,16 @@ void WS2812FX::setPixelColor(uint16_t n, uint8_t r, uint8_t g, uint8_t b, uint8_
   }
 }
 
+void WS2812FX::setPixelColor(uint16_t n, CRGB pixel) {
+  if(IS_GAMMA) {
+    ledArray[n] = pixel;
+    // Adafruit_NeoPixel::setPixelColor(n, gamma8(r), gamma8(g), gamma8(b));
+  } else {
+    ledArray[n] = pixel;
+    // Adafruit_NeoPixel::setPixelColor(n, r, g, b);
+  }
+}
+
 void WS2812FX::copyPixels(uint16_t dest, uint16_t src, uint16_t count) {
   uint8_t *pixels = getPixels();
   uint8_t bytesPerPixel = getNumBytesPerPixel(); // 3=RGB, 4=RGBW
@@ -593,8 +603,8 @@ CRGB WS2812FX::fadeColorScheme(uint8_t modAlongWheel, int colorMode) {
 
   switch (colorMode) {
     // Warm Cycle
-    case 1:
-      colorMod = COOL_CYCLE_COLOR_MOD;
+    case 3:
+      colorMod = WARM_CYCLE_COLOR_MOD;
       if (c < colorMod) {
         pixel.setRGB(255, colorMod - c, 0);
         // setPixel(i, 255, colorMod - *c, 0);
@@ -604,7 +614,7 @@ CRGB WS2812FX::fadeColorScheme(uint8_t modAlongWheel, int colorMode) {
       break;
       // Cool Cycle
     case 2:
-      colorMod = WARM_CYCLE_COLOR_MOD;
+      colorMod = COOL_CYCLE_COLOR_MOD;
       if (c < colorMod) {
          pixel.setRGB((colorMod - c) * 2, 0, 255);
       } else {
@@ -612,7 +622,7 @@ CRGB WS2812FX::fadeColorScheme(uint8_t modAlongWheel, int colorMode) {
       }
       break;
       // Nature Cycle
-    case 3:
+    case 1:
       colorMod = NATURE_CYCLE_COLOR_MOD;
       if (c < colorMod) {
          pixel.setRGB(0, 255, colorMod - c);
@@ -980,7 +990,7 @@ uint16_t WS2812FX::mode_rainbow(void) {
  */
 uint16_t WS2812FX::mode_rainbow_cycle(void) {
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
-    uint32_t color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, NORMAL_CYCLE);
+    CRGB color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, NORMAL_CYCLE);
     setPixelColor(SEGMENT.start + i, color);
   }
 
@@ -990,7 +1000,7 @@ uint16_t WS2812FX::mode_rainbow_cycle(void) {
 
 uint16_t WS2812FX::mode_cool_cycle(void) {
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
-    uint32_t color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, COOL_CYCLE);
+    CRGB color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, COOL_CYCLE);
     setPixelColor(SEGMENT.start + i, color);
   }
 
@@ -1000,7 +1010,7 @@ uint16_t WS2812FX::mode_cool_cycle(void) {
 
 uint16_t WS2812FX::mode_warm_cycle(void) {
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
-    uint32_t color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, WARM_CYCLE);
+    CRGB color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, WARM_CYCLE);
     setPixelColor(SEGMENT.start + i, color);
   }
 
@@ -1010,7 +1020,7 @@ uint16_t WS2812FX::mode_warm_cycle(void) {
 
 uint16_t WS2812FX::mode_nature_cycle(void) {
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
-    uint32_t color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, NATURE_CYCLE);
+    CRGB color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, NATURE_CYCLE);
     setPixelColor(SEGMENT.start + i, color);
   }
 
@@ -1020,7 +1030,7 @@ uint16_t WS2812FX::mode_nature_cycle(void) {
 
 uint16_t WS2812FX::mode_candy_cycle(void) {
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
-    uint32_t color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, CANDY_CYCLE);
+    CRGB color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, CANDY_CYCLE);
     setPixelColor(SEGMENT.start + i, color);
   }
 
@@ -1030,7 +1040,7 @@ uint16_t WS2812FX::mode_candy_cycle(void) {
 
 uint16_t WS2812FX::mode_christmas_cycle(void) {
   for(uint16_t i=0; i < SEGMENT_LENGTH; i++) {
-    uint32_t color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, CHRISTMAS_CYCLE);
+    CRGB color = fadeColorScheme(((i * 256 / SEGMENT_LENGTH) + SEGMENT_RUNTIME.counter_mode_step) & 0xFF, CHRISTMAS_CYCLE);
     setPixelColor(SEGMENT.start + i, color);
   }
 
@@ -1054,37 +1064,37 @@ uint16_t WS2812FX::mode_theater_chase(void) {
  */
 uint16_t WS2812FX::mode_theater_chase_rainbow(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
-  uint32_t color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, NORMAL_CYCLE);
+  CRGB color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, NORMAL_CYCLE);
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_theater_chase_cool(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
-  uint32_t color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, COOL_CYCLE);
+  CRGB color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, COOL_CYCLE);
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_theater_chase_warm(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
-  uint32_t color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, WARM_CYCLE);
+  CRGB color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, WARM_CYCLE);
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_theater_chase_nature(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
-  uint32_t color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, NATURE_CYCLE);
+  CRGB color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, NATURE_CYCLE);
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_theater_chase_candy(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
-  uint32_t color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, CANDY_CYCLE);
+  CRGB color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, CANDY_CYCLE);
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_theater_chase_christmas(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
-  uint32_t color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, CHRISTMAS_CYCLE);
+  CRGB color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, CHRISTMAS_CYCLE);
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
@@ -1515,7 +1525,7 @@ uint16_t WS2812FX::mode_chase_rainbow_white(void) {
 uint16_t WS2812FX::mode_chase_rainbow(void) {
   uint8_t color_sep = 256 / SEGMENT_LENGTH;
   uint8_t color_index = SEGMENT_RUNTIME.counter_mode_call & 0xFF;
-  uint32_t color = fadeColorScheme(((SEGMENT_RUNTIME.counter_mode_step * color_sep) + color_index) & 0xFF, NORMAL_CYCLE);
+  CRGB color = fadeColorScheme(((SEGMENT_RUNTIME.counter_mode_step * color_sep) + color_index) & 0xFF, NORMAL_CYCLE);
 
   return chase(color, WHITE, WHITE);
 }
@@ -1527,7 +1537,7 @@ uint16_t WS2812FX::mode_chase_rainbow(void) {
 uint16_t WS2812FX::mode_chase_blackout_rainbow(void) {
   uint8_t color_sep = 256 / SEGMENT_LENGTH;
   uint8_t color_index = SEGMENT_RUNTIME.counter_mode_call & 0xFF;
-  uint32_t color = fadeColorScheme(((SEGMENT_RUNTIME.counter_mode_step * color_sep) + color_index) & 0xFF, NORMAL_CYCLE);
+  CRGB color = fadeColorScheme(((SEGMENT_RUNTIME.counter_mode_step * color_sep) + color_index) & 0xFF, NORMAL_CYCLE);
 
   return chase(color, BLACK, BLACK);
 }
