@@ -391,6 +391,11 @@ uint32_t WS2812FX::getColor(uint8_t seg) {
   return _segments[seg].colors[0];
 }
 
+/// maximize the brightness of this CRGB object
+uint32_t WS2812FX::get32Bit(CRGB col)  {
+  return (((uint32_t) col.g) << 16) | (((uint32_t) col.r) << 8) | ((uint32_t) col.b);
+}
+
 uint32_t* WS2812FX::getColors(uint8_t seg) {
   return _segments[seg].colors;
 }
@@ -700,27 +705,27 @@ uint16_t WS2812FX::mode_blink(void) {
  * Other Blink effects. Cycling through the rainbow.
  */
 uint16_t WS2812FX::mode_blink_rainbow(void) {
-  return blink(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, NORMAL_CYCLE), SEGMENT.colors[1], false);
+  return blink(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, NORMAL_CYCLE)), SEGMENT.colors[1], false);
 }
 
 uint16_t WS2812FX::mode_blink_cool(void) {
-  return blink(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, COOL_CYCLE), SEGMENT.colors[1], false);
+  return blink(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, COOL_CYCLE)), SEGMENT.colors[1], false);
 }
 
 uint16_t WS2812FX::mode_blink_warm(void) {
-  return blink(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, WARM_CYCLE), SEGMENT.colors[1], false);
+  return blink(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, WARM_CYCLE)), SEGMENT.colors[1], false);
 }
 
 uint16_t WS2812FX::mode_blink_nature(void) {
-  return blink(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, NATURE_CYCLE), SEGMENT.colors[1], false);
+  return blink(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, NATURE_CYCLE)), SEGMENT.colors[1], false);
 }
 
 uint16_t WS2812FX::mode_blink_candy(void) {
-  return blink(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, CANDY_CYCLE), SEGMENT.colors[1], false);
+  return blink(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, CANDY_CYCLE)), SEGMENT.colors[1], false);
 }
 
 uint16_t WS2812FX::mode_blink_christmas(void) {
-  return blink(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, CHRISTMAS_CYCLE), SEGMENT.colors[1], false);
+  return blink(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, CHRISTMAS_CYCLE)), SEGMENT.colors[1], false);
 }
 
 /*
@@ -735,27 +740,27 @@ uint16_t WS2812FX::mode_strobe(void) {
  * Classic Strobe effect. Cycling through the rainbow.
  */
 uint16_t WS2812FX::mode_strobe_rainbow(void) {
-  return blink(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, NORMAL_CYCLE), SEGMENT.colors[1], true);
+  return blink(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, NORMAL_CYCLE)), SEGMENT.colors[1], true);
 }
 
 uint16_t WS2812FX::mode_strobe_cool(void) {
-  return blink(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, COOL_CYCLE), SEGMENT.colors[1], true);
+  return blink(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, COOL_CYCLE)), SEGMENT.colors[1], true);
 }
 
 uint16_t WS2812FX::mode_strobe_warm(void) {
-  return blink(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, WARM_CYCLE), SEGMENT.colors[1], true);
+  return blink(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, WARM_CYCLE)), SEGMENT.colors[1], true);
 }
 
 uint16_t WS2812FX::mode_strobe_nature(void) {
-  return blink(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, NATURE_CYCLE), SEGMENT.colors[1], true);
+  return blink(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, NATURE_CYCLE)), SEGMENT.colors[1], true);
 }
 
 uint16_t WS2812FX::mode_strobe_candy(void) {
-  return blink(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, CANDY_CYCLE), SEGMENT.colors[1], true);
+  return blink(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, CANDY_CYCLE)), SEGMENT.colors[1], true);
 }
 
 uint16_t WS2812FX::mode_strobe_christmas(void) {
-  return blink(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, CHRISTMAS_CYCLE), SEGMENT.colors[1], true);
+  return blink(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_call & 0xFF, CHRISTMAS_CYCLE)), SEGMENT.colors[1], true);
 }
 
 
@@ -1064,37 +1069,37 @@ uint16_t WS2812FX::mode_theater_chase(void) {
  */
 uint16_t WS2812FX::mode_theater_chase_rainbow(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
-  CRGB color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, NORMAL_CYCLE);
+  uint32_t color = get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, NORMAL_CYCLE));
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_theater_chase_cool(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
-  CRGB color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, COOL_CYCLE);
+  uint32_t color = get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, COOL_CYCLE));
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_theater_chase_warm(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
-  CRGB color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, WARM_CYCLE);
+  uint32_t color = get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, WARM_CYCLE));
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_theater_chase_nature(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
-  CRGB color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, NATURE_CYCLE);
+  uint32_t color = get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, NATURE_CYCLE));
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_theater_chase_candy(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
-  CRGB color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, CANDY_CYCLE);
+  uint32_t color = get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, CANDY_CYCLE));
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_theater_chase_christmas(void) {
   SEGMENT_RUNTIME.counter_mode_step = (SEGMENT_RUNTIME.counter_mode_step + 1) & 0xFF;
-  CRGB color = fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, CHRISTMAS_CYCLE);
+  uint32_t color = get32Bit(fadeColorScheme(SEGMENT_RUNTIME.counter_mode_step, CHRISTMAS_CYCLE));
   return tricolor_chase(color, SEGMENT.colors[1], SEGMENT.colors[1]);
 }
 
@@ -1155,31 +1160,31 @@ uint16_t WS2812FX::mode_twinkle(void) {
  * Inspired by www.tweaking4all.com/hardware/arduino/arduino-led-strip-effects/
  */
 uint16_t WS2812FX::mode_twinkle_random(void) {
-  return twinkle(fadeColorScheme(random8(), NORMAL_CYCLE), SEGMENT.colors[1]);
+  return twinkle(get32Bit(fadeColorScheme(random8(), NORMAL_CYCLE)), SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_twinkle_rainbow(void) {
-  return twinkle(fadeColorScheme(random8(), NORMAL_CYCLE), SEGMENT.colors[1]);
+  return twinkle(get32Bit(fadeColorScheme(random8(), NORMAL_CYCLE)), SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_twinkle_cool(void) {
-  return twinkle(fadeColorScheme(random8(), COOL_CYCLE), SEGMENT.colors[1]);
+  return twinkle(get32Bit(fadeColorScheme(random8(), COOL_CYCLE)), SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_twinkle_warm(void) {
-  return twinkle(fadeColorScheme(random8(), WARM_CYCLE), SEGMENT.colors[1]);
+  return twinkle(get32Bit(fadeColorScheme(random8(), WARM_CYCLE)), SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_twinkle_nature(void) {
-  return twinkle(fadeColorScheme(random8(), NATURE_CYCLE), SEGMENT.colors[1]);
+  return twinkle(get32Bit(fadeColorScheme(random8(), NATURE_CYCLE)), SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_twinkle_candy(void) {
-  return twinkle(fadeColorScheme(random8(), CANDY_CYCLE), SEGMENT.colors[1]);
+  return twinkle(get32Bit(fadeColorScheme(random8(), CANDY_CYCLE)), SEGMENT.colors[1]);
 }
 
 uint16_t WS2812FX::mode_twinkle_christmas(void) {
-  return twinkle(fadeColorScheme(random8(), CHRISTMAS_CYCLE), SEGMENT.colors[1]);
+  return twinkle(get32Bit(fadeColorScheme(random8(), CHRISTMAS_CYCLE)), SEGMENT.colors[1]);
 }
 
 /*
@@ -1467,42 +1472,42 @@ uint16_t WS2812FX::mode_chase_random(void) {
   if(SEGMENT_RUNTIME.counter_mode_step == 0) {
     SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
   }
-  return chase(fadeColorScheme(SEGMENT_RUNTIME.aux_param, NORMAL_CYCLE), WHITE, WHITE);
+  return chase(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.aux_param, NORMAL_CYCLE)), WHITE, WHITE);
 }
 
 uint16_t WS2812FX::mode_chase_cool(void) {
   if(SEGMENT_RUNTIME.counter_mode_step == 0) {
     SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
   }
-  return chase(fadeColorScheme(SEGMENT_RUNTIME.aux_param, COOL_CYCLE), WHITE, WHITE);
+  return chase(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.aux_param, COOL_CYCLE)), WHITE, WHITE);
 }
 
 uint16_t WS2812FX::mode_chase_warm(void) {
   if(SEGMENT_RUNTIME.counter_mode_step == 0) {
     SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
   }
-  return chase(fadeColorScheme(SEGMENT_RUNTIME.aux_param, WARM_CYCLE), WHITE, WHITE);
+  return chase(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.aux_param, WARM_CYCLE)), WHITE, WHITE);
 }
 
 uint16_t WS2812FX::mode_chase_nature(void) {
   if(SEGMENT_RUNTIME.counter_mode_step == 0) {
     SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
   }
-  return chase(fadeColorScheme(SEGMENT_RUNTIME.aux_param, NATURE_CYCLE), WHITE, WHITE);
+  return chase(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.aux_param, NATURE_CYCLE)), WHITE, WHITE);
 }
 
 uint16_t WS2812FX::mode_chase_candy(void) {
   if(SEGMENT_RUNTIME.counter_mode_step == 0) {
     SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
   }
-  return chase(fadeColorScheme(SEGMENT_RUNTIME.aux_param, CANDY_CYCLE), WHITE, WHITE);
+  return chase(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.aux_param, CANDY_CYCLE)), WHITE, WHITE);
 }
 
 uint16_t WS2812FX::mode_chase_christmas(void) {
   if(SEGMENT_RUNTIME.counter_mode_step == 0) {
     SEGMENT_RUNTIME.aux_param = get_random_wheel_index(SEGMENT_RUNTIME.aux_param);
   }
-  return chase(fadeColorScheme(SEGMENT_RUNTIME.aux_param, CHRISTMAS_CYCLE), WHITE, WHITE);
+  return chase(get32Bit(fadeColorScheme(SEGMENT_RUNTIME.aux_param, CHRISTMAS_CYCLE)), WHITE, WHITE);
 }
 
 
@@ -1525,7 +1530,7 @@ uint16_t WS2812FX::mode_chase_rainbow_white(void) {
 uint16_t WS2812FX::mode_chase_rainbow(void) {
   uint8_t color_sep = 256 / SEGMENT_LENGTH;
   uint8_t color_index = SEGMENT_RUNTIME.counter_mode_call & 0xFF;
-  CRGB color = fadeColorScheme(((SEGMENT_RUNTIME.counter_mode_step * color_sep) + color_index) & 0xFF, NORMAL_CYCLE);
+  uint32_t color = get32Bit(fadeColorScheme(((SEGMENT_RUNTIME.counter_mode_step * color_sep) + color_index) & 0xFF, NORMAL_CYCLE));
 
   return chase(color, WHITE, WHITE);
 }
@@ -1537,7 +1542,7 @@ uint16_t WS2812FX::mode_chase_rainbow(void) {
 uint16_t WS2812FX::mode_chase_blackout_rainbow(void) {
   uint8_t color_sep = 256 / SEGMENT_LENGTH;
   uint8_t color_index = SEGMENT_RUNTIME.counter_mode_call & 0xFF;
-  CRGB color = fadeColorScheme(((SEGMENT_RUNTIME.counter_mode_step * color_sep) + color_index) & 0xFF, NORMAL_CYCLE);
+  uint32_t color = get32Bit(fadeColorScheme(((SEGMENT_RUNTIME.counter_mode_step * color_sep) + color_index) & 0xFF, NORMAL_CYCLE));
 
   return chase(color, BLACK, BLACK);
 }
