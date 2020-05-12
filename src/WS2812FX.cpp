@@ -661,7 +661,7 @@ CRGB WS2812FX::fadeColorScheme(uint8_t modAlongWheel, int colorMode) {
 
 
 
-
+#pragma region
 /*
  * No blinking. Just plain old static light.
  */
@@ -2055,7 +2055,7 @@ uint16_t WS2812FX::mode_custom_15() {
   return customModes[15]();
 }
 
-
+#pragma endregion
 /*
  * Custom mode helpers
  */

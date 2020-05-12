@@ -133,6 +133,7 @@
 
 #define MODE_COUNT (sizeof(_names)/sizeof(_names[0]))
 
+#pragma region
 #define FX_MODE_STATIC                   0
 #define FX_MODE_BLINK                    1
 #define FX_MODE_BREATH                   2
@@ -257,6 +258,8 @@
 #define FX_MODE_CUSTOM_14               121  // custom modes need to go at the end
 #define FX_MODE_CUSTOM_15               122  // custom modes need to go at the end
 
+#pragma endregion
+
 #define WARM_CYCLE_COLOR_MOD			150
 #define COOL_CYCLE_COLOR_MOD			60
 #define NATURE_CYCLE_COLOR_MOD			50
@@ -301,7 +304,7 @@ static const uint8_t PROGMEM _NeoPixelGammaTable[256] = {
   150,152,154,156,158,160,162,164,166,168,170,172,174,176,178,180,
   182,184,186,188,191,193,195,197,199,202,204,206,209,211,213,215,
   218,220,223,225,227,230,232,235,237,240,242,245,247,250,252,255};
-
+#pragma region
 // create GLOBAL names to allow WS2812FX to compile with sketches and other libs that store strings
 // in PROGMEM (get rid of the "section type conflict with __c" errors once and for all. Amen.)
 const char name_0[] PROGMEM = "Static";
@@ -425,7 +428,7 @@ const char name_117[] PROGMEM = "Custom 12";
 const char name_118[] PROGMEM = "Custom 13";
 const char name_119[] PROGMEM = "Custom 14";
 const char name_120[] PROGMEM = "Custom 15";
-
+#pragma endregion
 
 static const __FlashStringHelper* _names[] = {
 	FSH(name_0),
